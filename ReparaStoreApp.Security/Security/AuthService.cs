@@ -36,6 +36,7 @@ namespace ReparaStoreApp.Security.Security
 
             var token = GenerateJwtToken(user);
             return AuthResult.Ok(token, user.Id);
+            //jeffito
         }
 
         private string GenerateJwtToken(User user)
