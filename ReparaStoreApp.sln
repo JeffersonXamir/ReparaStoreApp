@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.WPF", "ReparaStoreApp.WPF\ReparaStoreApp.WPF.csproj", "{C8886D4C-D217-401A-A27A-53FCA89C2DB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.Core", "ReparaStoreApp.Core\ReparaStoreApp.Core.csproj", "{18F13455-59A9-4608-9C06-C1DB069C544B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.Data", "ReparaStoreApp.Data\ReparaStoreApp.Data.csproj", "{D0B75666-8728-41F7-897E-FF9A15E3CFE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.Entities", "ReparaStoreApp.Entities\ReparaStoreApp.Entities.csproj", "{66EECBE1-FB75-4514-877E-3F2220021387}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.Common", "ReparaStoreApp.Common\ReparaStoreApp.Common.csproj", "{96E5E020-0DA3-4643-AD64-30AD3EE3EC41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReparaStoreApp.Security", "ReparaStoreApp.Security\ReparaStoreApp.Security.csproj", "{AD15C8F6-DBFB-4548-BC0F-8F3F164440FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8886D4C-D217-401A-A27A-53FCA89C2DB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8886D4C-D217-401A-A27A-53FCA89C2DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8886D4C-D217-401A-A27A-53FCA89C2DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8886D4C-D217-401A-A27A-53FCA89C2DB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18F13455-59A9-4608-9C06-C1DB069C544B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18F13455-59A9-4608-9C06-C1DB069C544B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18F13455-59A9-4608-9C06-C1DB069C544B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18F13455-59A9-4608-9C06-C1DB069C544B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0B75666-8728-41F7-897E-FF9A15E3CFE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0B75666-8728-41F7-897E-FF9A15E3CFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0B75666-8728-41F7-897E-FF9A15E3CFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0B75666-8728-41F7-897E-FF9A15E3CFE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66EECBE1-FB75-4514-877E-3F2220021387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66EECBE1-FB75-4514-877E-3F2220021387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66EECBE1-FB75-4514-877E-3F2220021387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66EECBE1-FB75-4514-877E-3F2220021387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E5E020-0DA3-4643-AD64-30AD3EE3EC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E5E020-0DA3-4643-AD64-30AD3EE3EC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E5E020-0DA3-4643-AD64-30AD3EE3EC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E5E020-0DA3-4643-AD64-30AD3EE3EC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD15C8F6-DBFB-4548-BC0F-8F3F164440FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD15C8F6-DBFB-4548-BC0F-8F3F164440FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD15C8F6-DBFB-4548-BC0F-8F3F164440FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD15C8F6-DBFB-4548-BC0F-8F3F164440FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {888F30A4-2396-4A44-9411-F4E1ED53009B}
+	EndGlobalSection
+EndGlobal

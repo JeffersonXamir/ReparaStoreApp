@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReparaStoreApp.Common\ReparaStoreApp.Common.csproj" />
+    <ProjectReference Include="..\ReparaStoreApp.Core\ReparaStoreApp.Core.csproj" />
+    <ProjectReference Include="..\ReparaStoreApp.Data\ReparaStoreApp.Data.csproj" />
+    <ProjectReference Include="..\ReparaStoreApp.Entities\ReparaStoreApp.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
