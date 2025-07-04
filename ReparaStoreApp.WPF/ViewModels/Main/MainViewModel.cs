@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using ReparaStoreApp.Security.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,41 +10,23 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
 {
     public  class MainViewModel : Screen
     {
-        private readonly IEventAggregator _eventAggregator;
-        private string _welcomeMessage;
+        private readonly IAuthService _authService;
+        private readonly IWindowManager _windowManager;
 
-        public MainViewModel(IEventAggregator eventAggregator)
+        public MainViewModel(IAuthService authService, IWindowManager windowManager)
         {
-            _eventAggregator = eventAggregator;
-            WelcomeMessage = "Bienvenido a la aplicación";
-
-            // Suscribirse a eventos si es necesario
-            _eventAggregator.Subscribe(this);
+            _authService = authService;
+            _windowManager = windowManager;
         }
 
-        public string WelcomeMessage
+        public void ShowHome()
         {
-            get { return _welcomeMessage; }
-            set { Set(ref _welcomeMessage, value); }
+            //ActivateItemAsync(new HomeViewModel());
         }
 
-        // Ejemplo de comando para navegar a otra vista
-        public void ShowOtherView()
+        public void ShowCustomers()
         {
-            // Implementar lógica de navegación
+            //ActivateItemAsync(new CustomersViewModel());
         }
-
-        protected override Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
-        {
-            _eventAggregator.Unsubscribe(this);
-            return base.OnDeactivateAsync(close, cancellationToken);
-        }
-
-        //protected override void OnDeactivate(bool close)
-        //{
-        //    // Limpieza si es necesario
-        //    _eventAggregator.Unsubscribe(this);
-        //    base.OnDeactivate(close);
-        //}
     }
 }

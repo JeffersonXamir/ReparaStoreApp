@@ -22,7 +22,14 @@ namespace ReparaStoreApp.WPF.ViewModels
             _eventAggregator = eventAggregator;
 
             // Mostrar la pantalla de login al inicio
+            //ShowLogin();
+        }
+
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            // Mostrar la pantalla de login al inicio
             ShowLogin();
+            return base.OnActivateAsync(cancellationToken);
         }
 
         private void ShowLogin()
@@ -35,8 +42,8 @@ namespace ReparaStoreApp.WPF.ViewModels
         public void OnLoginSuccess()
         {
             _isLoggedIn = true;
-            // Aquí cargaremos el dashboard después del login
-            // ShowDashboard();
+            var dashboardVM = IoC.Get<MainViewModel>();
+            ActivateItemAsync(dashboardVM);
         }
     }
 }

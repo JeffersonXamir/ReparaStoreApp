@@ -69,7 +69,8 @@ namespace ReparaStoreApp.WPF
             // Registra tus ViewModels aquí
             _container
                 .PerRequest<ShellViewModel>()
-                .PerRequest<LoginViewModel>();
+                .PerRequest<LoginViewModel>()
+                .PerRequest<MainViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
