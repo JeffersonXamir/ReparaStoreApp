@@ -23,7 +23,8 @@
                 <ui:Button
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Nuevo"
-                    cal:Message.Attach="[Event Click] = [Action ExecuteNew()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecuteNew()]"
+                    IsEnabled="{Binding IsNewEnabled}">
                     <ui:SymbolIcon Symbol="Add24"/>
                 </ui:Button>
 
@@ -31,7 +32,8 @@
                 <ui:Button 
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Crear"
-                    cal:Message.Attach="[Event Click] = [Action ExecuteCreate()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecuteCreate()]"
+                    IsEnabled="{Binding IsSaveEnabled}">
                     <ui:SymbolIcon Symbol="Save24"/>
                 </ui:Button>
 
@@ -39,7 +41,8 @@
                 <ui:Button 
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Editar"
-                    cal:Message.Attach="[Event Click] = [Action ExecuteEdit()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecuteEdit()]"
+                    IsEnabled="{Binding IsEditEnabled}">
                     <ui:SymbolIcon Symbol="Edit24"/>
                 </ui:Button>
 
@@ -47,7 +50,8 @@
                 <ui:Button 
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Eliminar"
-                    cal:Message.Attach="[Event Click] = [Action ExecuteDelete()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecuteDelete()]"
+                    IsEnabled="{Binding IsDeleteEnabled}">
                     <ui:SymbolIcon Symbol="Delete24"/>
                 </ui:Button>
 
@@ -55,7 +59,8 @@
                 <ui:Button 
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Actualizar"
-                    cal:Message.Attach="[Event Click] = [Action ExecuteUpdate()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecuteUpdate()]"
+                    IsEnabled="{Binding IsRefreshEnabled}">
                     <ui:SymbolIcon Symbol="ArrowClockwise24"/>
                 </ui:Button>
 
@@ -63,8 +68,18 @@
                 <ui:Button 
                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Imprimir"
-                    cal:Message.Attach="[Event Click] = [Action ExecutePrint()]">
+                    cal:Message.Attach="[Event Click] = [Action ExecutePrint()]"
+                    IsEnabled="{Binding IsPrintEnabled}">
                     <ui:SymbolIcon Symbol="Print24"/>
+                </ui:Button>
+
+                <!-- Botón deshacer -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Deshacer"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteUndo()]"
+                    IsEnabled="{Binding IsUndoEnabled}">
+                    <ui:SymbolIcon Symbol="ArrowUndo24"/>
                 </ui:Button>
             </StackPanel>
         </ui:CardControl>
@@ -77,7 +92,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- NavigationView -->
-            <ui:NavigationView Grid.Column="0"
+            <ui:NavigationView Grid.Column="0" 
+                               IsEnabled="{Binding IsNavigationEnabled, FallbackValue=true}"
                        PaneDisplayMode="Left"
                        IsBackButtonVisible="Collapsed"
                        MenuItemsSource="{Binding MenuItems}"

@@ -19,7 +19,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             set { _titulo = value; NotifyOfPropertyChange(() => Titulo); }
         }
 
-        public UserViewModel(IAuthService authService, IWindowManager windowManager)
+        public UserViewModel(IAuthService authService, IWindowManager windowManager, IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _authService = authService;
             _windowManager = windowManager;
@@ -27,11 +27,15 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             Titulo = "Gestión de Usuarios";
         }
 
-        public override void New()
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+        }
+
+        public override Task New()
         {
             try
             {
-                base.New();
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
             }
@@ -39,19 +43,46 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             {
                 HandleError(ex, "crear nuevo usuario");
             }
-        }
 
-        public override void Delete()
+            return base.New();
+        }
+        public override Task Create()
         {
             try
             {
-                base.Delete();
+                IsBusy = true;
+                // Lógica para guardar el usuario
+                ShowNotification("Usuario guardado exitosamente");
+            }
+            catch (Exception ex)
+            {
+                ShowNotification($"Error al guardar: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+            return base.Create();
+
+        }
+
+        public override Task Delete()
+        {
+            try
+            {
                 // Lógica específica para eliminar usuario
             }
             catch (Exception ex)
             {
                 HandleError(ex, "eliminar usuario");
             }
+            return base.Delete();
+
+        }
+
+        public override Task Undo()
+        {
+            return base.Undo();
         }
     }
 }

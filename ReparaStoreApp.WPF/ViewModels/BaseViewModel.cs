@@ -5,10 +5,48 @@ namespace ReparaStoreApp.WPF.ViewModels
 {
     public abstract class BaseViewModel : Screen
     {
+        protected readonly IEventAggregator _eventAggregator;
+        private bool _hasFocus;
+        private bool _editMode;
+        private bool _creationMode;
         private string _statusMessage;
         private bool _isBusy;
         private CancellationTokenSource _statusMessageCts;
-        
+
+        protected BaseViewModel(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+        }
+
+        public bool HasFocus
+        {
+            get => _hasFocus;
+            set
+            {
+                _hasFocus = value;
+                NotifyOfPropertyChange(() => HasFocus);
+            }
+        }
+
+        public bool EditMode
+        {
+            get => _editMode;
+            set
+            {
+                _editMode = value;
+                NotifyOfPropertyChange(() => EditMode);
+            }
+        }
+
+        public bool CreationMode
+        {
+            get => _creationMode;
+            set
+            {
+                _creationMode = value;
+                NotifyOfPropertyChange(() => CreationMode);
+            }
+        }
 
         public string StatusMessage
         {
@@ -40,47 +78,85 @@ namespace ReparaStoreApp.WPF.ViewModels
             }
         }
 
-        // Métodos comunes que todos los ViewModels deben implementar
-        //public virtual void New()
-        //{
-        //    StatusMessage = "Nuevo elemento creado";
-        //    // Implementación específica en cada ViewModel
-        //}
+        protected override async void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            await InitializeFocusState(); // Se ejecutará cuando la vista se adjunte
+        }
+       
 
-        //public virtual void Create()
-        //{
-        //    StatusMessage = "Creando elemento...";
-        //    // Implementación específica en cada ViewModel
-        //}
+        private async Task InitializeFocusState()
+        {
+            // Establece el estado inicial basado en si estamos editando
+            if (EditMode || CreationMode)
+            {
+                await OnFocus();
+            }
+            else
+            {
+                await OnLostFocus();
+            }
+        }
+        public virtual async Task OnFocus()
+        {
+            HasFocus = true;
+            await _eventAggregator.PublishOnUIThreadAsync(new NavigationControlMessage { IsEnabled = false });
 
-        //public virtual void Edit()
-        //{
-        //    StatusMessage = "Editando elemento...";
-        //    // Implementación específica en cada ViewModel
-        //}
+            if (!EditMode && !CreationMode)
+            {
+                // Modo normal - desactivar solo ciertos botones
+                await _eventAggregator.PublishOnUIThreadAsync(new ControlMessage
+                {
+                    Enable = true,
+                    Actions = new List<ToolbarButtonsAction>
+                {
+                    ToolbarButtonsAction.New,
+                    ToolbarButtonsAction.Delete,
+                    ToolbarButtonsAction.Refresh,
+                    ToolbarButtonsAction.Print,
+                    ToolbarButtonsAction.Search
+                }
+                });
+            }
+            else
+            {
+                // Modo edición/creación - mostrar solo guardar/cancelar
+                await _eventAggregator.PublishOnUIThreadAsync(new ControlMessage
+                {
+                    Enable = true,
+                    Actions = new List<ToolbarButtonsAction>
+                {
+                    ToolbarButtonsAction.Save,
+                    ToolbarButtonsAction.Undo
+                }
+                });
+            }
+        }
 
-        //public virtual void Delete()
-        //{
-        //    StatusMessage = "Eliminando elemento...";
-        //    // Implementación específica en cada ViewModel
-        //}
+        public virtual async Task OnLostFocus()
+        {
+            HasFocus = false;
+            EditMode = false;
+            CreationMode = false;
+            await _eventAggregator.PublishOnUIThreadAsync(new NavigationControlMessage { IsEnabled = true });
+            await ResetToolbar();
+        }
 
-        //public virtual void Update()
-        //{
-        //    StatusMessage = "Actualizando...";
-        //    // Implementación específica en cada ViewModel
-        //}
-
-        //public virtual void Print()
-        //{
-        //    StatusMessage = "Preparando para imprimir...";
-        //    // Implementación específica en cada ViewModel
-        //}
-
-        //protected void ShowNotification(string message)
-        //{
-        //    StatusMessage = message;
-        //}
+        protected async Task ResetToolbar()
+        {
+            await _eventAggregator.PublishOnUIThreadAsync(new ControlMessage
+            {
+                Enable = true,
+                Actions = new List<ToolbarButtonsAction>
+                {
+                    ToolbarButtonsAction.New,
+                    ToolbarButtonsAction.Delete,
+                    ToolbarButtonsAction.Refresh,
+                    ToolbarButtonsAction.Print,
+                    ToolbarButtonsAction.Search
+                }
+            });
+        }
 
         private async void StartStatusMessageTimeout(CancellationToken token)
         {
@@ -100,12 +176,49 @@ namespace ReparaStoreApp.WPF.ViewModels
         }
 
         // Métodos virtuales con implementación base
-        public virtual void New() => ShowNotification("Nuevo elemento creado");
-        public virtual void Create() => ShowNotification("Creando elemento...");
-        public virtual void Edit() => ShowNotification("Editando elemento...");
-        public virtual void Delete() => ShowNotification("Eliminando elemento...");
-        public virtual void Update() => ShowNotification("Actualizando...");
-        public virtual void Print() => ShowNotification("Preparando para imprimir...");
+        public virtual async Task New()
+        {
+            ShowNotification("Nuevo elemento creado");
+            CreationMode = true;
+            await OnFocus();
+        }
+
+        public virtual async Task Create()
+        {
+            ShowNotification("Creando elemento...");
+            await OnLostFocus();
+        }
+
+        public virtual async Task Edit()
+        {
+            ShowNotification("Editando elemento...");
+            EditMode = true;
+            await OnFocus();
+        }
+
+        public virtual async Task Delete()
+        {
+            ShowNotification("Eliminando elemento...");
+            await OnLostFocus();
+        }
+
+        public virtual async Task Update()
+        {
+            ShowNotification("Actualizando...");
+            await OnLostFocus();
+        }
+
+        public virtual async Task Print()
+        {
+            ShowNotification("Preparando para imprimir...");
+            await OnLostFocus();
+        }
+
+        public virtual async Task Undo()
+        {
+            ShowNotification("cancelando cambios...");
+            await OnLostFocus();
+        }
 
         protected void ShowNotification(string message)
         {

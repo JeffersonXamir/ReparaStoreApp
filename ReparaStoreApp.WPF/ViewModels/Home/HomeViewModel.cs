@@ -16,7 +16,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
         public string Titulo
         {
             get { return _titulo; }
-            set { _titulo = value; NotifyOfPropertyChange(()=> Titulo); }
+            set { _titulo = value; NotifyOfPropertyChange(() => Titulo); }
         }
 
         public string WelcomeMessage { get; } = "Panel de control principal de la aplicación";
@@ -28,10 +28,11 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
             new QuickStat("Ingresos", "$8,450", "+12% vs mes pasado")
         };
 
-        public HomeViewModel(IAuthService authService, IWindowManager windowManager)
+        public HomeViewModel(IAuthService authService, IWindowManager windowManager, IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _authService = authService;
             _windowManager = windowManager;
+
             Titulo = "Inicio";
         }
 
@@ -41,11 +42,10 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
             await Task.Delay(100); // Simula operación asíncrona
         }
 
-        public override void New()
+        public override Task New()
         {
             try
             {
-                base.New();
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
             }
@@ -53,19 +53,20 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
             {
                 HandleError(ex, "crear nuevo usuario");
             }
+            return base.New();
         }
 
-        public override void Delete()
+        public override Task Delete()
         {
             try
             {
-                base.Delete();
                 // Lógica específica para eliminar usuario
             }
             catch (Exception ex)
             {
                 HandleError(ex, "eliminar usuario");
             }
+            return base.Delete();
         }
     }
 

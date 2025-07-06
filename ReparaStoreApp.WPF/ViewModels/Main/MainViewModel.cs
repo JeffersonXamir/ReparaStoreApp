@@ -9,18 +9,38 @@ using Wpf.Ui.Controls;
 
 namespace ReparaStoreApp.WPF.ViewModels.Main
 {
-    public class MainViewModel : Conductor<IScreen>.Collection.OneActive
+    public class MainViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<ControlMessage>, IHandle<NavigationControlMessage>
     {
         private readonly IAuthService _authService;
         private readonly IWindowManager _windowManager;
+        private readonly Dictionary<ToolbarButtonsAction, bool> _buttonStates = new();
+        
+        private bool _isNavigationEnabled = true;
+        public bool IsNavigationEnabled
+        {
+            get => _isNavigationEnabled;
+            set
+            {
+                _isNavigationEnabled = value;
+                NotifyOfPropertyChange(() => IsNavigationEnabled);
+            }
+        }
 
         public ObservableCollection<NavigationViewItem> MenuItems { get; } = new();
         public ObservableCollection<NavigationViewItem> FooterMenuItems { get; } = new();
 
-        public MainViewModel(IAuthService authService, IWindowManager windowManager)
+        public MainViewModel(IAuthService authService, IWindowManager windowManager, IEventAggregator eventAggregator)
         {
             _authService = authService;
             _windowManager = windowManager;
+
+            eventAggregator.Subscribe(this);
+
+            // Inicializar todos los botones como habilitados
+            foreach (ToolbarButtonsAction action in Enum.GetValues(typeof(ToolbarButtonsAction)))
+            {
+                _buttonStates[action] = true;
+            }
 
             DisplayName = "ReparaStore App";
             InitializeMenu();
@@ -81,6 +101,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         public void ExecuteDelete() => SafeExecute(vm => vm.Delete());
         public void ExecuteUpdate() => SafeExecute(vm => vm.Update());
         public void ExecutePrint() => SafeExecute(vm => vm.Print());
+        public void ExecuteUndo() => SafeExecute(vm => vm.Undo());
 
         private void SafeExecute(Action<BaseViewModel> action)
         {
@@ -102,5 +123,48 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
                 //    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        public async Task HandleAsync(ControlMessage message, CancellationToken cancellationToken)
+        {
+            if (!message.Enable)
+            {
+                // Deshabilitar todos los botones
+                foreach (var key in _buttonStates.Keys.ToList())
+                {
+                    _buttonStates[key] = false;
+                }
+            }
+            else
+            {
+                // Habilitar solo los botones especificados
+                foreach (var key in _buttonStates.Keys.ToList())
+                {
+                    _buttonStates[key] = message.Actions.Contains(key);
+                }
+            }
+
+            // Notificar cambios
+            NotifyOfPropertyChange(nameof(IsNewEnabled));
+            NotifyOfPropertyChange(nameof(IsSaveEnabled));
+            NotifyOfPropertyChange(nameof(IsEditEnabled));
+            NotifyOfPropertyChange(nameof(IsDeleteEnabled));
+            NotifyOfPropertyChange(nameof(IsRefreshEnabled));
+            NotifyOfPropertyChange(nameof(IsPrintEnabled));
+            NotifyOfPropertyChange(nameof(IsUndoEnabled));
+        }
+
+        public Task HandleAsync(NavigationControlMessage message, CancellationToken cancellationToken)
+        {
+            IsNavigationEnabled = message.IsEnabled;
+            return Task.CompletedTask;
+        }
+
+        public bool IsNewEnabled => _buttonStates[ToolbarButtonsAction.New];
+        public bool IsSaveEnabled => _buttonStates[ToolbarButtonsAction.Save];
+        public bool IsEditEnabled => _buttonStates[ToolbarButtonsAction.Edit];
+        public bool IsDeleteEnabled => _buttonStates[ToolbarButtonsAction.Delete];
+        public bool IsRefreshEnabled => _buttonStates[ToolbarButtonsAction.Refresh];
+        public bool IsPrintEnabled => _buttonStates[ToolbarButtonsAction.Print];
+        public bool IsUndoEnabled => _buttonStates[ToolbarButtonsAction.Undo];
     }
 }

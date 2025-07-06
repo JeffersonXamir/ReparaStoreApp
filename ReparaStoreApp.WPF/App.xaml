@@ -19,8 +19,8 @@
             <local1:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
             <Style x:Key="ToolbarButtonStyle" TargetType="ui:Button">
-                <Setter Property="Margin" Value="2,0"/>
-                <Setter Property="Padding" Value="8,4"/>
+                <Setter Property="Margin" Value="5,0"/>
+                <Setter Property="Padding" Value="10,4"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Background" Value="Transparent"/>
