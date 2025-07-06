@@ -3,6 +3,7 @@ using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Controls;
 
@@ -70,6 +71,35 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
                 {
                     ActivateItemAsync(screen);
                 }
+            }
+        }
+
+        // Métodos seguros para los botones de la barra de herramientas
+        public void ExecuteNew() => SafeExecute(vm => vm.New());
+        public void ExecuteCreate() => SafeExecute(vm => vm.Create());
+        public void ExecuteEdit() => SafeExecute(vm => vm.Edit());
+        public void ExecuteDelete() => SafeExecute(vm => vm.Delete());
+        public void ExecuteUpdate() => SafeExecute(vm => vm.Update());
+        public void ExecutePrint() => SafeExecute(vm => vm.Print());
+
+        private void SafeExecute(Action<BaseViewModel> action)
+        {
+            try
+            {
+                if (ActiveItem is BaseViewModel baseViewModel)
+                {
+                    action?.Invoke(baseViewModel);
+                }
+                else
+                {
+                    //MessageBox.Show("La vista actual no soporta esta acción", "Advertencia",
+                    //    MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show($"Error al ejecutar la acción: {ex.Message}", "Error",
+                //    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

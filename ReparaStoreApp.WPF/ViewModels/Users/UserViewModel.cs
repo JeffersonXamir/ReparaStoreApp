@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.WPF.ViewModels.Users
 {
-    public class UserViewModel : Screen
+    public class UserViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
         private readonly IWindowManager _windowManager;
@@ -27,5 +27,31 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             Titulo = "Gestión de Usuarios";
         }
 
+        public override void New()
+        {
+            try
+            {
+                base.New();
+                // Lógica específica para nuevo usuario
+                // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex, "crear nuevo usuario");
+            }
+        }
+
+        public override void Delete()
+        {
+            try
+            {
+                base.Delete();
+                // Lógica específica para eliminar usuario
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex, "eliminar usuario");
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.WPF.ViewModels.Home
 {
-    public class HomeViewModel : Screen
+    public class HomeViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
         private readonly IWindowManager _windowManager;
@@ -39,6 +39,33 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
         {
             // Lógica para mostrar estadísticas detalladas
             await Task.Delay(100); // Simula operación asíncrona
+        }
+
+        public override void New()
+        {
+            try
+            {
+                base.New();
+                // Lógica específica para nuevo usuario
+                // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex, "crear nuevo usuario");
+            }
+        }
+
+        public override void Delete()
+        {
+            try
+            {
+                base.Delete();
+                // Lógica específica para eliminar usuario
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex, "eliminar usuario");
+            }
         }
     }
 

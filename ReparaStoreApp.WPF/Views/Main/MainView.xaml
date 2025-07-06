@@ -5,65 +5,153 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Main"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:cal="http://www.caliburnproject.org" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!-- NavigationView -->
-        <ui:NavigationView Grid.Column="0"
+        <!-- Toolbar/Menu Horizontal alternativo -->
+        <ui:CardControl Grid.Row="0" Margin="0" Padding="5" CornerRadius="0" HorizontalContentAlignment="Left" >
+            <StackPanel Orientation="Horizontal" >
+                <!-- Botón Nuevo -->
+                <ui:Button
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Nuevo"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteNew()]">
+                    <ui:SymbolIcon Symbol="Add24"/>
+                </ui:Button>
+
+                <!-- Botón Crear -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Crear"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteCreate()]">
+                    <ui:SymbolIcon Symbol="Save24"/>
+                </ui:Button>
+
+                <!-- Botón Editar -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Editar"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteEdit()]">
+                    <ui:SymbolIcon Symbol="Edit24"/>
+                </ui:Button>
+
+                <!-- Botón Eliminar -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Eliminar"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteDelete()]">
+                    <ui:SymbolIcon Symbol="Delete24"/>
+                </ui:Button>
+
+                <!-- Botón Actualizar -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Actualizar"
+                    cal:Message.Attach="[Event Click] = [Action ExecuteUpdate()]">
+                    <ui:SymbolIcon Symbol="ArrowClockwise24"/>
+                </ui:Button>
+
+                <!-- Botón Imprimir -->
+                <ui:Button 
+                    Style="{StaticResource ToolbarButtonStyle}"
+                    ToolTip="Imprimir"
+                    cal:Message.Attach="[Event Click] = [Action ExecutePrint()]">
+                    <ui:SymbolIcon Symbol="Print24"/>
+                </ui:Button>
+            </StackPanel>
+        </ui:CardControl>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- NavigationView -->
+            <ui:NavigationView Grid.Column="0"
                        PaneDisplayMode="Left"
                        IsBackButtonVisible="Collapsed"
                        MenuItemsSource="{Binding MenuItems}"
                        FooterMenuItemsSource="{Binding FooterMenuItems}"
                        cal:Message.Attach="[Event SelectionChanged] = [Action OnNavigationChanged($source)]">
 
-            <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox PlaceholderText="Buscar...">
-                    <ui:AutoSuggestBox.Icon>
-                        <ui:IconSourceElement>
-                            <ui:SymbolIconSource Symbol="Search24" />
-                        </ui:IconSourceElement>
-                    </ui:AutoSuggestBox.Icon>
-                </ui:AutoSuggestBox>
-            </ui:NavigationView.AutoSuggestBox>
+                <ui:NavigationView.AutoSuggestBox>
+                    <ui:AutoSuggestBox PlaceholderText="Buscar...">
+                        <ui:AutoSuggestBox.Icon>
+                            <ui:IconSourceElement>
+                                <ui:SymbolIconSource Symbol="Search24" />
+                            </ui:IconSourceElement>
+                        </ui:AutoSuggestBox.Icon>
+                    </ui:AutoSuggestBox>
+                </ui:NavigationView.AutoSuggestBox>
 
-            <ui:NavigationView.PaneHeader>
-                <Border
+                <ui:NavigationView.PaneHeader>
+                    <Border
                     Margin="0,0,0,8"
                     Background="{DynamicResource StripedBackgroundBrush}"
                     CornerRadius="4">
-                    <TextBlock
+                        <TextBlock
                         Margin="24"
                         VerticalAlignment="Center"
                         FontWeight="Medium"
                         Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                         Text="Pane Header" />
-                </Border>
-            </ui:NavigationView.PaneHeader>
+                    </Border>
+                </ui:NavigationView.PaneHeader>
 
-            <ui:NavigationView.PaneFooter>
-                <Border
+                <ui:NavigationView.PaneFooter>
+                    <Border
                     Margin="0,8,0,0"
                     Background="{DynamicResource StripedBackgroundBrush}"
                     CornerRadius="4">
-                    <TextBlock
+                        <TextBlock
                         Margin="24"
                         VerticalAlignment="Center"
                         FontWeight="Medium"
                         Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                         Text="Pane Footer" />
-                </Border>
-            </ui:NavigationView.PaneFooter> 
-        </ui:NavigationView>
+                    </Border>
+                </ui:NavigationView.PaneFooter>
+            </ui:NavigationView>
 
-        <!-- Área de contenido -->
-        <ContentControl Grid.Column="1" 
+            <!-- Área de contenido -->
+            <ContentControl Grid.Column="1" 
                     cal:View.Model="{Binding ActiveItem}" />
+        </Grid>
+
+        <!-- Barra de estado -->
+        <ui:CardControl Grid.Row="2" Margin="0" Padding="5" CornerRadius="0" HorizontalContentAlignment="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- TextBlock con binding seguro -->
+                <TextBlock Text="{Binding ActiveItem.StatusMessage, FallbackValue='', TargetNullValue=''}" 
+               Margin="5,0"
+               VerticalAlignment="Center"/>
+
+                <!-- ProgressRing con binding seguro -->
+                <ui:ProgressRing Grid.Column="1"
+                      IsIndeterminate="True" 
+                      Visibility="{Binding ActiveItem.IsBusy, 
+                                  Converter={StaticResource BooleanToVisibilityConverter},
+                                  FallbackValue=Collapsed,
+                                  TargetNullValue=Collapsed}"
+                      Width="16" 
+                      Height="16"
+                      Margin="0,0,5,0"/>
+            </Grid>
+        </ui:CardControl>
     </Grid>
 </UserControl>
