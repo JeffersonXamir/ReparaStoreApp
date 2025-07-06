@@ -4,140 +4,66 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Main"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             xmlns:cal="http://www.caliburnproject.org">
-    <!--<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            --><!-- TitleBar --><!--
-            <RowDefinition Height="Auto" />
-            --><!-- Toolbar --><!--
-            <RowDefinition Height="*" />
-            --><!-- Main content --><!--
-            <RowDefinition Height="Auto" />
-            --><!-- Snackbar --><!--
-        </Grid.RowDefinitions>
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
 
-        --><!-- Title bar de WPF UI --><!--
-        <ui:TitleBar Grid.Row="0"
-                     Title="ReparaStoreApp" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        --><!-- Barra de herramientas con botones --><!--
-        <Grid Grid.Row="1" >
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                <ui:Button Icon="Add24" Content="Nuevo" Margin="5,0" />
-                <ui:Button Icon="Edit24" Content="Editar" Margin="5,0" />
-                <ui:Button Icon="Save24" Content="Guardar" Margin="5,0" />
-                <ui:Button Icon="ArrowClockwise24" Content="Actualizar" Margin="5,0" />
-            </StackPanel>
-        </Grid>
+        <!-- NavigationView -->
+        <ui:NavigationView Grid.Column="0"
+                       PaneDisplayMode="Left"
+                       IsBackButtonVisible="Collapsed"
+                       MenuItemsSource="{Binding MenuItems}"
+                       FooterMenuItemsSource="{Binding FooterMenuItems}"
+                       cal:Message.Attach="[Event SelectionChanged] = [Action OnNavigationChanged($source)]">
 
-        --><!-- Cuerpo principal --><!--
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox PlaceholderText="Buscar...">
+                    <ui:AutoSuggestBox.Icon>
+                        <ui:IconSourceElement>
+                            <ui:SymbolIconSource Symbol="Search24" />
+                        </ui:IconSourceElement>
+                    </ui:AutoSuggestBox.Icon>
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>
 
-            --><!-- Navegación --><!--
-            <ui:NavigationView Grid.Column="0"
-                               PaneDisplayMode="Left"
-                               IsBackButtonVisible="Collapsed"
-                               Width="200">
-                <ui:NavigationView.MenuItems>
-                    <ui:NavigationViewItem Content="Inicio" Icon="Home24" />
-                    <ui:NavigationViewItem Content="Clientes" Icon="People24" />
-                    <ui:NavigationViewItem Content="Productos" Icon="Box24" />
-                    <ui:NavigationViewItem Content="Ventas" Icon="Money24" />
-                </ui:NavigationView.MenuItems>
-            </ui:NavigationView>
+            <ui:NavigationView.PaneHeader>
+                <Border
+                    Margin="0,0,0,8"
+                    Background="{DynamicResource StripedBackgroundBrush}"
+                    CornerRadius="4">
+                    <TextBlock
+                        Margin="24"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Pane Header" />
+                </Border>
+            </ui:NavigationView.PaneHeader>
 
-            --><!-- Área dinámica --><!--
-            <ContentControl Grid.Column="1"
-                            cal:View.Model="{Binding ActiveItem}" />
-        </Grid>
+            <ui:NavigationView.PaneFooter>
+                <Border
+                    Margin="0,8,0,0"
+                    Background="{DynamicResource StripedBackgroundBrush}"
+                    CornerRadius="4">
+                    <TextBlock
+                        Margin="24"
+                        VerticalAlignment="Center"
+                        FontWeight="Medium"
+                        Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Pane Footer" />
+                </Border>
+            </ui:NavigationView.PaneFooter> 
+        </ui:NavigationView>
 
-        --><!-- Snackbar --><!--
-        <ui:SnackbarPresenter x:Name="SnackbarPresenter" Grid.Row="3" />
-    </Grid>-->
-    
-    <!--Ejemplo 2-->
-    <!--<ui:NavigationView IsBackButtonVisible="Auto">
-        <ui:NavigationView.MenuItems>
-            <ui:NavigationViewItem Content="Inicio" Icon="Home24" />
-            <ui:NavigationViewItem Content="Clientes" Icon="People24" />
-            <ui:NavigationViewItem Content="Productos" Icon="Box24" />
-            <ui:NavigationViewItem Content="Ventas" Icon="Money24" />
-        </ui:NavigationView.MenuItems>
-    </ui:NavigationView>-->
-    
-    <!--Ejemplo 3-->
-    <ui:NavigationView
-    MinHeight="300"
-    Margin="0"
-    IsBackButtonVisible="Auto"
-    IsPaneToggleVisible="True"
-    PaneDisplayMode="Left"
-    PaneTitle="Pane Title">
-        <ui:NavigationView.AutoSuggestBox>
-            <ui:AutoSuggestBox Margin="8,0,8,8" PlaceholderText="Search" />
-        </ui:NavigationView.AutoSuggestBox>
-        <ui:NavigationView.MenuItems>
-            <ui:NavigationViewItem
-            Content="Dashboard"
-            Icon="{ui:SymbolIcon Home24}"
-             />
-            <ui:NavigationViewItem
-            Content="Items"
-            Icon="{ui:SymbolIcon Library24}"
-             />
-        </ui:NavigationView.MenuItems>
-        <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem
-            Content="Settings"
-            Icon="{ui:SymbolIcon Settings24}"
-             />
-        </ui:NavigationView.FooterMenuItems>
-        <ui:NavigationView.Header>
-            <Border
-            Margin="8"
-            Background="{DynamicResource StripedBackgroundBrush}"
-            CornerRadius="4">
-                <TextBlock
-                Margin="24"
-                VerticalAlignment="Center"
-                FontWeight="Medium"
-                Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                Text="NavigationView Header" />
-            </Border>
-        </ui:NavigationView.Header>
-        <ui:NavigationView.PaneHeader>
-            <Border
-            Margin="0,0,0,8"
-            Background="{DynamicResource StripedBackgroundBrush}"
-            CornerRadius="4">
-                <TextBlock
-                Margin="24"
-                VerticalAlignment="Center"
-                FontWeight="Medium"
-                Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                Text="Pane Header" />
-            </Border>
-        </ui:NavigationView.PaneHeader>
-        <ui:NavigationView.PaneFooter>
-            <Border
-            Margin="0,8,0,0"
-            Background="{DynamicResource StripedBackgroundBrush}"
-            CornerRadius="4">
-                <TextBlock
-                Margin="24"
-                VerticalAlignment="Center"
-                FontWeight="Medium"
-                Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
-                Text="Pane Footer" />
-            </Border>
-        </ui:NavigationView.PaneFooter>
-    </ui:NavigationView>
+        <!-- Área de contenido -->
+        <ContentControl Grid.Column="1" 
+                    cal:View.Model="{Binding ActiveItem}" />
+    </Grid>
 </UserControl>

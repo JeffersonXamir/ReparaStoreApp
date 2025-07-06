@@ -28,7 +28,8 @@ namespace ReparaStoreApp.WPF.ViewModels
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             // Mostrar la pantalla de login al inicio
-            ShowLogin();
+            //ShowLogin();
+            OnLoginSuccess();
             return base.OnActivateAsync(cancellationToken);
         }
 

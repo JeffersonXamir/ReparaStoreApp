@@ -7,8 +7,10 @@ using ReparaStoreApp.Data.Repositories.Login;
 using ReparaStoreApp.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
+using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
+using ReparaStoreApp.WPF.ViewModels.Users;
 using System.IO;
 using System.Windows;
 
@@ -70,7 +72,9 @@ namespace ReparaStoreApp.WPF
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<LoginViewModel>()
-                .PerRequest<MainViewModel>();
+                .PerRequest<MainViewModel>()
+                .PerRequest<HomeViewModel>()
+                .PerRequest<UserViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
