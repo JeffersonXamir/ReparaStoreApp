@@ -1,18 +1,26 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ReparaStoreApp.Common.Entities;
+using ReparaStoreApp.Common.Mappings;
 using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Data;
 using ReparaStoreApp.Data.Repositories.Login;
+using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
+using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
+using ReparaStoreApp.WPF.ViewModels.Services.Users;
 using ReparaStoreApp.WPF.ViewModels.Users;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace ReparaStoreApp.WPF
 {
@@ -59,6 +67,16 @@ namespace ReparaStoreApp.WPF
 
             _container.Instance(jwtSettings); // Registro CORRECTO
 
+            // Configuración de AutoMapper
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                // Asegúrate de usar el namespace correcto
+                cfg.AddProfile<AppMappingProfile>();
+            });
+
+            // Create the IMapper instance using the CreateMapper method
+            _container.Instance<IMapper>(mapperConfig.CreateMapper());
+
             // 3. Configuración de servicios
             _container
                 .Singleton<IWindowManager, WindowManager>()
@@ -67,6 +85,9 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IUserRepository, UserRepository>()
                 .Singleton<IUserService, UserService>();
 
+            // Nuevos servicios para el listado genérico
+            _container.PerRequest<IDataService<UserItem>, UserDataService>();
+            _container.PerRequest<GenericListViewModel<UserItem>>(); // ¡Esta línea es crucial!
 
             // Registra tus ViewModels aquí
             _container

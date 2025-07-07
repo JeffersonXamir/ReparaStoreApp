@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ReparaStoreApp.WPF.Views.Controls.GenericList.GenericListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Controls.GenericList"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Search Box -->
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Icono -->
+            <ui:SymbolIcon Symbol="Search24" 
+                  Margin="4,0"
+                  VerticalAlignment="Center"/>
+
+            <!-- TextBox -->
+            <ui:TextBox Grid.Column="1"
+               PlaceholderText="Buscar..."
+               Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyUp">
+                        <cal:ActionMessage MethodName="Search"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ui:TextBox>
+        </Grid>
+
+        <!-- List with Scroll -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ListView x:Name="Items" 
+                     SelectedItem="{Binding SelectedItem}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      IsEnabled="{Binding IsListEnabled}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Código" 
+                                      DisplayMemberBinding="{Binding Code}"/>
+                        <GridViewColumn Header="Nombre" 
+                                      DisplayMemberBinding="{Binding Name}" 
+                                      Width="200"/>
+                        <!-- Columnas adicionales pueden agregarse dinámicamente -->
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
+
+        <!-- Pagination -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Anterior" 
+                   cal:Message.Attach="[Event Click] = [PreviousPage()]"
+                   IsEnabled="{Binding CanPreviousPage}"
+                   Margin="5"/>
+
+            <TextBlock Text="{Binding CurrentPage}" 
+                      VerticalAlignment="Center"
+                      Margin="5"/>
+
+            <Button Content="Siguiente" 
+                    cal:Message.Attach="[Event Click] = [NextPage()]"
+                    IsEnabled="{Binding CanNextPage}"
+                    Margin="5"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

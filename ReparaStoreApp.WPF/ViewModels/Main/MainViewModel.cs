@@ -51,7 +51,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         {
             // Menú principal
             MenuItems.Add(CreateNavigationItem("Inicio", SymbolRegular.Home24, typeof(HomeViewModel)));
-            MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(UserViewModel)));
+            MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(HomeViewModel)));
             MenuItems.Add(CreateNavigationItem("Productos", SymbolRegular.Box24, typeof(HomeViewModel)));
 
             // Menú de configuración (con subitems)
@@ -61,7 +61,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 }
             };
 
-            settingsItem.MenuItems.Add(CreateNavigationItem("Usuarios", SymbolRegular.Person24, typeof(HomeViewModel)));
+            settingsItem.MenuItems.Add(CreateNavigationItem("Usuarios", SymbolRegular.Person24, typeof(UserViewModel)));
             settingsItem.MenuItems.Add(CreateNavigationItem("Ajustes", SymbolRegular.Settings24, typeof(HomeViewModel)));
 
 

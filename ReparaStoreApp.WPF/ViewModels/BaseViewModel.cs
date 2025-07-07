@@ -111,6 +111,7 @@ namespace ReparaStoreApp.WPF.ViewModels
                     Actions = new List<ToolbarButtonsAction>
                 {
                     ToolbarButtonsAction.New,
+                    ToolbarButtonsAction.Edit,
                     ToolbarButtonsAction.Delete,
                     ToolbarButtonsAction.Refresh,
                     ToolbarButtonsAction.Print,
@@ -150,6 +151,7 @@ namespace ReparaStoreApp.WPF.ViewModels
                 Actions = new List<ToolbarButtonsAction>
                 {
                     ToolbarButtonsAction.New,
+                    ToolbarButtonsAction.Edit,
                     ToolbarButtonsAction.Delete,
                     ToolbarButtonsAction.Refresh,
                     ToolbarButtonsAction.Print,
