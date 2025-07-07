@@ -115,7 +115,51 @@ namespace ReparaStoreApp.WPF
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            // Manejar migraciones si se pasa el parámetro
+            if (e.Args.Contains("--migrate"))
+            {
+                ApplyDatabaseMigrations();
+
+                // Si solo se pidió migrar, cerramos la app
+                if (e.Args.Length == 1)
+                {
+                    MessageBox.Show("Migraciones aplicadas correctamente", "Éxito",
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+
             DisplayRootViewForAsync<ShellViewModel>();
+        }
+
+        private void ApplyDatabaseMigrations()
+        {
+            try
+            {
+                // Reutilizamos la configuración ya existente en el Bootstrapper
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("MariaDB");
+                var serverVersion = ServerVersion.AutoDetect(connectionString);
+
+                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionsBuilder.UseMySql(connectionString, serverVersion);
+
+                using (var context = new AppDbContext(optionsBuilder.Options))
+                {
+                    context.Database.Migrate();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error aplicando migraciones: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown(1);
+            }
         }
     }
 }
