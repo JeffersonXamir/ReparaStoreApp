@@ -7,11 +7,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>d566f169-b0be-4e1d-b588-ab8ad26ac793</UserSecretsId>
+    <PackageIcon>ReparaStoreApp.ico</PackageIcon>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Assets\Icons\ReparaStoreApp.ico" />
     <None Remove="Assets\Images\imagen_background.jpg" />
     <None Remove="Assets\Images\imagen_background_1.jpg" />
   </ItemGroup>
@@ -58,6 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Icons\ReparaStoreApp.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -14,22 +14,26 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 ; Agregado para evitar advertencias
 WizardStyle=modern
+SetupIconFile=C:\Users\janchundia\Documents\ReparaStoreApp\ReparaStoreApp\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreApp.ico
 
 [Files]
 Source: "ReparaStoreApp.WPF\bin\Release\net8.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "ReparaStoreApp.WPF\appsettings.json"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
+Source: "C:\Users\janchundia\Documents\ReparaStoreApp\ReparaStoreApp\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreApp.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"
-Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"
+; Icono en el menú de inicio
+Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreApp.ico"
+
+; Icono en el escritorio
+Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreApp.ico"
+
+; Icono para desinstalar
+Name: "{group}\Desinstalar ReparaStore"; Filename: "{uninstallexe}"; IconFilename: "{app}\ReparaStoreApp.ico"
 
 [Run]
-Filename: "{app}\ReparaStoreApp.WPF.exe"; Parameters: "--migrate"; Description: "{cm:ConfigDatabase}"; Flags: postinstall nowait skipifsilent runascurrentuser
-Filename: "{app}\ReparaStoreApp.WPF.exe"; Description: "{cm:LaunchProgram}"; Flags: postinstall nowait skipifsilent
-
-[CustomMessages]
-ConfigDatabase=Configurar base de datos
-LaunchProgram=Iniciar ReparaStore
+Filename: "{app}\ReparaStoreApp.WPF.exe"; Parameters: "--migrate"; Description: "Configurar base de datos"; Flags: postinstall nowait skipifsilent runascurrentuser
+Filename: "{app}\ReparaStoreApp.WPF.exe"; Description: "Iniciar aplicación"; Flags: postinstall nowait skipifsilent
 
 [Code]
 var
@@ -61,7 +65,6 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   if CurPageID = DatabasePage.ID then
   begin
-    // Preparamos el JSON pero NO lo guardamos aún
     AppSettingsJson := 
     '{' + #13#10 +
     '  "ConnectionStrings": {' + #13#10 +
@@ -84,10 +87,8 @@ end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  // Esperamos hasta que la instalación esté en progreso
   if (CurStep = ssPostInstall) and (AppSettingsJson <> '') then
   begin
-    // Ahora {app} está disponible y podemos guardar el archivo
     SaveStringToFile(ExpandConstant('{app}\appsettings.json'), AppSettingsJson, False);
   end;
 end;
