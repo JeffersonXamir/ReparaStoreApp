@@ -17,7 +17,7 @@ namespace ReparaStoreApp.Common.Mappings
             // Mapeo de User (entidad de BD) a UserItem (DTO para WPF)
             CreateMap<User, UserItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Username));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
                 //.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
 
             //// Mapeos inversos si son necesarios

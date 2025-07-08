@@ -22,7 +22,7 @@ namespace ReparaStoreApp.Data.Repositories.Login
             return await _context.Users
                 .Include(u => u.UserRoles)  // Carga UserRoles
                 .ThenInclude(ur => ur.Role) // Carga los Roles relacionados
-                .FirstOrDefaultAsync(u => u.Username == username);
+                .FirstOrDefaultAsync(u => u.Name == username);
         }
 
         public async Task<User> GetByIdAsync(int id)
@@ -36,9 +36,9 @@ namespace ReparaStoreApp.Data.Repositories.Login
         {
             return await _context.Users
                 .Where(u => string.IsNullOrEmpty(searchText) ||
-                           u.Username.Contains(searchText) )
+                           u.Name.Contains(searchText) )
                            //u.FullName.Contains(searchText))
-                .OrderBy(u => u.Username)
+                .OrderBy(u => u.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -48,7 +48,7 @@ namespace ReparaStoreApp.Data.Repositories.Login
         {
             return await _context.Users
                 .Where(u => string.IsNullOrEmpty(searchText) ||
-                          u.Username.Contains(searchText) )
+                          u.Name.Contains(searchText) )
                           //u..Contains(searchText))
                 .CountAsync();
         }

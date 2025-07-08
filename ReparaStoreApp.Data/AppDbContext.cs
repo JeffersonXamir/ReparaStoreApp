@@ -43,10 +43,16 @@ namespace ReparaStoreApp.Data
             #region User Configuration
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasIndex(e => e.Username).IsUnique();
-                entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
+                entity.HasIndex(e => e.Code).IsUnique();
+                entity.Property(e => e.Code).IsRequired().HasMaxLength(50);
+                entity.HasIndex(e => e.Name).IsUnique();
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.PasswordHash).IsRequired();
+                entity.Property(e => e.FirstName).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.LastName).IsRequired().HasMaxLength(500);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.PhoneNumber).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Note).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
             });
@@ -87,9 +93,14 @@ namespace ReparaStoreApp.Data
                 new User
                 {
                     Id = 1,
-                    Username = "admin",
+                    Code = "001",
+                    Name = "admin",
+                    FirstName = "admin",
+                    LastName = "admin",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123*"),
                     Email = "admin@reparastore.com",
+                    PhoneNumber = "1234567890",
+                    Note = "Usuario Administrador",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 }
