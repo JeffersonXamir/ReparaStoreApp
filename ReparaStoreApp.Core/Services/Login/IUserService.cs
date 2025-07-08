@@ -13,5 +13,8 @@ namespace ReparaStoreApp.Core.Services.Login
         //Task<User> Create(User user, string password);
         Task<User> AuthenticateUserAsync(string username, string password);
         Task<User> GetUserByIdAsync(int id);
+        Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize);
+        Task<int> GetUserCountAsync(string searchText);
+        Task SaveUserAsync(User user);
     }
 }

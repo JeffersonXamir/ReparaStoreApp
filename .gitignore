@@ -361,8 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/ReparaStoreApp.WPF/appsettings.json
-/ReparaStoreApp.Data/DesignTimeDbContextFactory.cs
-/ReparaStoreApp.Data/DesignTimeDbContextFactory.cs
-/ReparaStoreApp.WPF/appsettings.json
+/output/ReparaStoreSetup.exe
 /Installer/Output/ReparaStoreSetup.exe

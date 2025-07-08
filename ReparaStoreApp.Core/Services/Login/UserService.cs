@@ -31,5 +31,20 @@ namespace ReparaStoreApp.Core.Services.Login
         {
             return await _userRepository.GetByIdAsync(id);
         }
+
+        public async Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize)
+        {
+            return await _userRepository.SearchAsync(searchText, page, pageSize);
+        }
+
+        public async Task<int> GetUserCountAsync(string searchText)
+        {
+            return await _userRepository.GetCountAsync(searchText);
+        }
+
+        public async Task SaveUserAsync(User user)
+        {
+            await _userRepository.SaveAsync(user);
+        }
     }
 }

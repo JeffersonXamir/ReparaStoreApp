@@ -29,6 +29,7 @@ namespace ReparaStoreApp.WPF.ViewModels
         {
             // Mostrar la pantalla de login al inicio
             ShowLogin();
+            //OnLoginSuccess();
             return base.OnActivateAsync(cancellationToken);
         }
 
