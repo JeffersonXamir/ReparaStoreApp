@@ -1,16 +1,26 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using ReparaStoreApp.Common.Entities;
+using ReparaStoreApp.Common.Mappings;
 using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Data;
 using ReparaStoreApp.Data.Repositories.Login;
+using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
+using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
+using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
+using ReparaStoreApp.WPF.ViewModels.Services.Users;
+using ReparaStoreApp.WPF.ViewModels.Users;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace ReparaStoreApp.WPF
 {
@@ -57,6 +67,16 @@ namespace ReparaStoreApp.WPF
 
             _container.Instance(jwtSettings); // Registro CORRECTO
 
+            // Configuración de AutoMapper
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                // Asegúrate de usar el namespace correcto
+                cfg.AddProfile<AppMappingProfile>();
+            });
+
+            // Create the IMapper instance using the CreateMapper method
+            _container.Instance<IMapper>(mapperConfig.CreateMapper());
+
             // 3. Configuración de servicios
             _container
                 .Singleton<IWindowManager, WindowManager>()
@@ -65,11 +85,17 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IUserRepository, UserRepository>()
                 .Singleton<IUserService, UserService>();
 
+            // Nuevos servicios para el listado genérico
+            _container.PerRequest<IDataService<UserItem>, UserDataService>();
+            _container.PerRequest<GenericListViewModel<UserItem>>(); // ¡Esta línea es crucial!
 
             // Registra tus ViewModels aquí
             _container
                 .PerRequest<ShellViewModel>()
-                .PerRequest<LoginViewModel>();
+                .PerRequest<LoginViewModel>()
+                .PerRequest<MainViewModel>()
+                .PerRequest<HomeViewModel>()
+                .PerRequest<UserViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
@@ -89,7 +115,51 @@ namespace ReparaStoreApp.WPF
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            // Manejar migraciones si se pasa el parámetro
+            if (e.Args.Contains("--migrate"))
+            {
+                ApplyDatabaseMigrations();
+
+                // Si solo se pidió migrar, cerramos la app
+                if (e.Args.Length == 1)
+                {
+                    MessageBox.Show("Migraciones aplicadas correctamente", "Éxito",
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+
             DisplayRootViewForAsync<ShellViewModel>();
+        }
+
+        private void ApplyDatabaseMigrations()
+        {
+            try
+            {
+                // Reutilizamos la configuración ya existente en el Bootstrapper
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("MariaDB");
+                var serverVersion = ServerVersion.AutoDetect(connectionString);
+
+                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionsBuilder.UseMySql(connectionString, serverVersion);
+
+                using (var context = new AppDbContext(optionsBuilder.Options))
+                {
+                    context.Database.Migrate();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error aplicando migraciones: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown(1);
+            }
         }
     }
 }
