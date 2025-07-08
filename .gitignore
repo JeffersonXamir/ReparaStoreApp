@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /ReparaStoreApp.Data/DesignTimeDbContextFactory.cs
 /ReparaStoreApp.Data/DesignTimeDbContextFactory.cs
 /ReparaStoreApp.WPF/appsettings.json
+/Installer/Output/ReparaStoreSetup.exe
