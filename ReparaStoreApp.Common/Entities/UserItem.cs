@@ -8,6 +8,13 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class UserItem: Item
     {
-        // demas campos de la entidad User
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PasswordHash { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Note { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsActive { get; set; }
     }
 }

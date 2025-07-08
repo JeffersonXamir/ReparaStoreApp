@@ -1,4 +1,6 @@
-﻿using ReparaStoreApp.Data.Repositories.Login;
+﻿using AutoMapper;
+using ReparaStoreApp.Common.Entities;
+using ReparaStoreApp.Data.Repositories.Login;
 using ReparaStoreApp.Entities.Models.Security;
 using System;
 using System.Collections.Generic;
@@ -11,10 +13,12 @@ namespace ReparaStoreApp.Core.Services.Login
     public class UserService: IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<User> AuthenticateUserAsync(string username, string password)
@@ -45,6 +49,12 @@ namespace ReparaStoreApp.Core.Services.Login
         public async Task SaveUserAsync(User user)
         {
             await _userRepository.SaveAsync(user);
+        }
+
+        public async Task UpdateUserAsync(UserItem user)
+        {
+            var userEntity = _mapper.Map<User>(user);
+            await _userRepository.SaveAsync(userEntity);
         }
     }
 }

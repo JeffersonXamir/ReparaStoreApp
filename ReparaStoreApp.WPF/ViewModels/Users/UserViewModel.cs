@@ -2,6 +2,7 @@
 using Caliburn.Micro;
 using ReparaStoreApp.Common;
 using ReparaStoreApp.Common.Entities;
+using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
@@ -20,6 +21,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
         private readonly IAuthService _authService;
         private readonly IWindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IUserService _userService;
         private readonly IDataService<UserItem> _userDataService;
         private readonly IMapper _mapper;
         private readonly GenericListViewModel<UserItem> _userListViewModel;
@@ -64,12 +66,14 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                             IWindowManager windowManager, 
                             IEventAggregator eventAggregator,
                             IDataService<UserItem> userDataService,
+                            IUserService userService,
                             IMapper mapper) : base(eventAggregator)
         {
             _authService = authService;
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
             _userDataService = userDataService;
+            _userService = userService;
             _mapper = mapper;
 
             Titulo = "Gestión de Usuarios";
@@ -176,8 +180,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                 else if (EditMode)
                 {
                     // Lógica para edición
-                    //await _userDataService.SaveAsync(EditCopy);
-                    //CurrentUser = EditCopy; // Actualizar el original
+                    _userService.UpdateUserAsync(EditCopy);
+                    CurrentUser = EditCopy; // Actualizar el original
                     ShowNotification("Usuario actualizado exitosamente");
                 }
 

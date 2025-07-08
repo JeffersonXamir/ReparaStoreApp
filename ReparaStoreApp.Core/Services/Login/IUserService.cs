@@ -1,4 +1,5 @@
-﻿using ReparaStoreApp.Entities.Models.Security;
+﻿using ReparaStoreApp.Common.Entities;
+using ReparaStoreApp.Entities.Models.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace ReparaStoreApp.Core.Services.Login
         Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize);
         Task<int> GetUserCountAsync(string searchText);
         Task SaveUserAsync(User user);
+        Task UpdateUserAsync(UserItem user);
     }
 }
