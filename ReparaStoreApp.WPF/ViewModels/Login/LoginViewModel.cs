@@ -64,6 +64,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
 
         public async Task Login()
         {
+            IsLoading = true;
             try
             {
                 var result = await _authService.AuthenticateAsync(Username, Password);
@@ -83,7 +84,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
 
                     var shell = (ShellViewModel)Parent;
                     shell.OnLoginSuccess();
-                    await TryCloseAsync();
+                    //await TryCloseAsync();
                 }
                 else
                 {
@@ -95,6 +96,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
                 ErrorMessage = "Error de conexión con el servidor";
                 // Log.Error(ex, "Error en Login");
             }
+            finally { IsLoading = false; }
 
             //if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)) { return; }
 

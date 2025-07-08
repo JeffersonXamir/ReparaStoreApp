@@ -1,7 +1,4 @@
-﻿using Caliburn.Micro;
-using ReparaStoreApp.WPF.ViewModels.Home;
-using ReparaStoreApp.WPF.ViewModels.Main;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,16 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Wpf.Ui.Controls;
 
-namespace ReparaStoreApp.WPF.Views.Main
+namespace ReparaStoreApp.WPF.Views.Home
 {
     /// <summary>
-    /// Lógica de interacción para MainView.xaml
+    /// Lógica de interacción para HomeView.xaml
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class HomeView : UserControl
     {
-        public MainView()
+        public HomeView()
         {
             InitializeComponent();
         }
