@@ -16,7 +16,9 @@ namespace ReparaStoreApp.Core.Services.Login
         Task<User> GetUserByIdAsync(int id);
         Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize);
         Task<int> GetUserCountAsync(string searchText);
-        Task SaveUserAsync(User user);
+        Task SaveUserAsync(UserItem user);
         Task UpdateUserAsync(UserItem user);
+        Task ActivateUserAsync(UserItem user);
+        Task DeleteUserAsync(UserItem user);
     }
 }

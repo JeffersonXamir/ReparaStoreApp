@@ -15,6 +15,13 @@ namespace ReparaStoreApp.Common.Entities
         public string PhoneNumber { get; set; }
         public string Note { get; set; }
         public DateTime CreatedAt { get; set; }
-        public bool IsActive { get; set; }
+        
+        private bool _isActive;
+        public bool IsActive
+        {
+            get { return _isActive; }
+            set { _isActive = value; NotifyOfPropertyChange(()=> IsActive); }
+        }
+
     }
 }

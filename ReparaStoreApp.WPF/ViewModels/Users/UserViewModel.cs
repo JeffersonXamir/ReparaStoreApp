@@ -5,6 +5,7 @@ using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security.Security;
+using ReparaStoreApp.WPF.Models;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
 using System;
@@ -34,7 +35,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             set
             {
                 _currentUser = value;
-                _editCopy = value != null ? CloneUserItem(value) : new UserItem();
+                _editCopy = value != null ? (UserItem)CurrentUser.Clone() : new UserItem();
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(() => EditCopy);
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
@@ -62,8 +63,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             set { _titulo = value; NotifyOfPropertyChange(() => Titulo); }
         }
 
-        public UserViewModel(IAuthService authService, 
-                            IWindowManager windowManager, 
+        public UserViewModel(IAuthService authService,
+                            IWindowManager windowManager,
                             IEventAggregator eventAggregator,
                             IDataService<UserItem> userDataService,
                             IUserService userService,
@@ -106,9 +107,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                 // Copiar todas las propiedades relevantes
             };
         }
-        
 
-        
+
+
 
         private async Task LoadUserDetails(int userId)
         {
@@ -132,8 +133,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             try
             {
                 CreationMode = true;
+                NotifyOfPropertyChange(() => IsInEditOrCreationMode);
+
                 // Deshabilitar la lista durante la edición
                 _userListViewModel.IsListEnabled = false;
+
+                EditCopy = new UserItem(); // Crear una copia vacía para edición
+                EditCopy.Id = 0;
 
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
@@ -164,55 +170,83 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             }
             return base.Edit();
         }
-        public override Task Create()
+        public override async Task Create()
         {
             try
             {
                 IsBusy = true;
 
+                var validateForm = await ValidateForm();
+                if (!validateForm.Success)
+                {
+                    await ShowNotificationMessage($"{validateForm.ErrorMessage}");
+                    return;
+                }
+
                 if (CreationMode)
                 {
                     // Lógica para nuevo usuario
-                    //var newUser = await _userDataService.SaveAsync(EditCopy);
-                    //CurrentUser = newUser;
-                    ShowNotification("Usuario creado exitosamente");
+                    await _userService.SaveUserAsync(EditCopy);
+                    
+                    await ShowNotification("Usuario creado exitosamente");
                 }
                 else if (EditMode)
                 {
                     // Lógica para edición
-                    _userService.UpdateUserAsync(EditCopy);
+                    await _userService.UpdateUserAsync(EditCopy);
                     CurrentUser = EditCopy; // Actualizar el original
-                    ShowNotification("Usuario actualizado exitosamente");
+                    await ShowNotificationMessage("Usuario actualizado exitosamente");
+                    await ShowNotification("Usuario actualizado exitosamente");
                 }
 
                 // Finalizar modo
                 CreationMode = false;
                 EditMode = false;
                 _userListViewModel.IsListEnabled = true;
+                await _userListViewModel.LoadData();
+                await base.Create();
             }
             catch (Exception ex)
             {
-                ShowNotification($"Error al guardar: {ex.Message}");
+                await ShowNotification($"Error al guardar: {ex.Message}");
             }
             finally
             {
                 IsBusy = false;
             }
-            return base.Create();
 
         }
 
-        public override Task Delete()
+        public override async Task Activate()
         {
             try
             {
-                // Lógica específica para eliminar usuario
+                await _userService.ActivateUserAsync(EditCopy);
+                EditCopy.IsActive = true;
+                CurrentUser.IsActive = true;
+                await ShowNotificationMessage("Registro activado exitosamente");
             }
             catch (Exception ex)
             {
                 HandleError(ex, "eliminar usuario");
             }
-            return base.Delete();
+            await base.Activate();
+        }
+
+        public override async Task Delete()
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(EditCopy);
+                EditCopy.IsActive = false;
+                CurrentUser.IsActive = false;
+                await ShowNotificationMessage("Registro desactivado exitosamente");
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex, "eliminar usuario");
+            }
+            await base.Delete();
 
         }
 
@@ -221,7 +255,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             // Restaurar valores originales
             if (CurrentUser != null)
             {
-                EditCopy = CloneUserItem(CurrentUser);
+                EditCopy = (UserItem)CurrentUser.Clone();
             }
 
             CreationMode = false;
@@ -229,6 +263,68 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             _userListViewModel.IsListEnabled = true;
 
             return base.Undo();
+        }
+
+        public override async Task Update()
+        {
+            await _userListViewModel.LoadData();
+            await base.Update();
+        }
+
+        public override async Task<ValidateForm> ValidateForm()
+        {
+            ValidateForm validateForm = new ValidateForm();
+            try
+            {
+                IsBusy = true;
+
+                validateForm.Success = true;
+                validateForm.ErrorMessage = string.Empty;
+
+                if (string.IsNullOrEmpty(EditCopy.Code))
+                {
+                    validateForm.Success = false;
+                    validateForm.ErrorMessage = "El código del usuario es obligatorio.";
+                    return validateForm;
+                }
+
+                if (string.IsNullOrEmpty(EditCopy.Name))
+                {
+                    validateForm.Success = false;
+                    validateForm.ErrorMessage = "El nombre del usuario es obligatorio.";
+                    return validateForm;
+                }
+
+                if (string.IsNullOrEmpty(EditCopy.PhoneNumber))
+                {
+                    validateForm.Success = false;
+                    validateForm.ErrorMessage = "El número telefonico del usuario es obligatorio.";
+                    return validateForm;
+                }
+
+                if (CreationMode)
+                {
+                    if (string.IsNullOrEmpty(EditCopy.PasswordHash))
+                    {
+                        validateForm.Success = false;
+                        validateForm.ErrorMessage = "La contraseña del usuario es obligatorio.";
+                        return validateForm;
+                    }
+                }
+
+                return validateForm;
+            }
+            catch (Exception ex)
+            {
+                validateForm.Success = false;
+                validateForm.ErrorMessage = "Error al guardar la información.";
+                await ShowNotification($"Error al guardar: {ex.Message}");
+                return validateForm;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

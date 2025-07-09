@@ -99,6 +99,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         public void ExecuteCreate() => SafeExecute(vm => vm.Create());
         public void ExecuteEdit() => SafeExecute(vm => vm.Edit());
         public void ExecuteDelete() => SafeExecute(vm => vm.Delete());
+        public void ExecuteActivate() => SafeExecute(vm => vm.Activate());
         public void ExecuteUpdate() => SafeExecute(vm => vm.Update());
         public void ExecutePrint() => SafeExecute(vm => vm.Print());
         public void ExecuteUndo() => SafeExecute(vm => vm.Undo());

@@ -14,5 +14,7 @@ namespace ReparaStoreApp.Data.Repositories.Login
         Task<IEnumerable<User>> SearchAsync(string searchText, int page, int pageSize);
         Task<int> GetCountAsync(string searchText);
         Task SaveAsync(User user);
+        Task Delete(User user);
+        Task Activate(User user);
     }
 }

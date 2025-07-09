@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using ReparaStoreApp.Security.Security;
+using ReparaStoreApp.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +68,11 @@ namespace ReparaStoreApp.WPF.ViewModels.Home
                 HandleError(ex, "eliminar usuario");
             }
             return base.Delete();
+        }
+
+        public override Task<ValidateForm> ValidateForm()
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -17,11 +17,11 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar/Menu Horizontal alternativo -->
-        <ui:CardControl Grid.Row="0" Margin="0" Padding="5" CornerRadius="0" HorizontalContentAlignment="Left" >
+        <ui:CardControl Grid.Row="0" Margin="0" Padding="5" CornerRadius="0"  HorizontalContentAlignment="Left" >
             <StackPanel Orientation="Horizontal" >
                 <!-- Botón Nuevo -->
                 <ui:Button
-                    Style="{StaticResource ToolbarButtonStyle}"
+                     Style="{StaticResource ToolbarButtonStyle}"
                     ToolTip="Nuevo"
                     cal:Message.Attach="[Event Click] = [Action ExecuteNew()]"
                     IsEnabled="{Binding IsNewEnabled}">
@@ -94,6 +94,7 @@
             <!-- NavigationView -->
             <ui:NavigationView Grid.Column="0" 
                                IsEnabled="{Binding IsNavigationEnabled, FallbackValue=true}"
+                               Background="#c8c8c8"
                        PaneDisplayMode="Left"
                        IsBackButtonVisible="Collapsed"
                        MenuItemsSource="{Binding MenuItems}"

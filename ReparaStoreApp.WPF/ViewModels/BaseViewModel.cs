@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
-using System;
+using ReparaStoreApp.WPF.Models;
+using System.Windows.Media.Imaging;
+using Wpf.Ui.Controls;
 
 namespace ReparaStoreApp.WPF.ViewModels
 {
@@ -180,51 +182,69 @@ namespace ReparaStoreApp.WPF.ViewModels
         // Métodos virtuales con implementación base
         public virtual async Task New()
         {
-            ShowNotification("Nuevo elemento creado");
+            await ShowNotification("Nuevo elemento creado");
             CreationMode = true;
             await OnFocus();
         }
 
         public virtual async Task Create()
         {
-            ShowNotification("Creando elemento...");
+            //await ShowNotification("Creando elemento...");
             await OnLostFocus();
         }
 
         public virtual async Task Edit()
         {
-            ShowNotification("Editando elemento...");
+            await ShowNotification("Editando elemento...");
             EditMode = true;
             await OnFocus();
         }
 
         public virtual async Task Delete()
         {
-            ShowNotification("Eliminando elemento...");
+            await ShowNotification("Eliminando elemento...");
+            await OnLostFocus();
+        }
+
+        public virtual async Task Activate()
+        {
+            await ShowNotification("Activando elemento...");
             await OnLostFocus();
         }
 
         public virtual async Task Update()
         {
-            ShowNotification("Actualizando...");
+            await ShowNotification("Actualizando...");
             await OnLostFocus();
         }
 
         public virtual async Task Print()
         {
-            ShowNotification("Preparando para imprimir...");
+            await ShowNotification("Preparando para imprimir...");
             await OnLostFocus();
         }
 
         public virtual async Task Undo()
         {
-            ShowNotification("cancelando cambios...");
+            await ShowNotification("cancelando cambios...");
             await OnLostFocus();
         }
 
-        protected void ShowNotification(string message)
+        protected async Task ShowNotification(string message)
         {
             StatusMessage = message;
+        }
+
+        protected async Task ShowNotificationMessage(string message)
+        {
+            var uiMessageBox = new MessageBox
+            {
+                Title = "ReparaStoreApp",
+                Content = message,
+                CloseButtonText = "Aceptar",
+            };
+
+            _ = await uiMessageBox.ShowDialogAsync();
         }
 
         //protected override void OnDeactivate(bool close)
@@ -239,5 +259,7 @@ namespace ReparaStoreApp.WPF.ViewModels
             StatusMessage = $"Error al {actionName}: {ex.Message}";
             // Aquí podrías también registrar el error en un log
         }
+
+        public abstract Task<ValidateForm> ValidateForm();
     }
 }

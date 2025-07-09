@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ReparaStoreApp.WPF.ViewModels.Login
 {
@@ -44,7 +45,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
         public bool IsLoading
         {
             get { return _isLoading; }
-            set { _isLoading = value; NotifyOfPropertyChange(() => Password); }
+            set { _isLoading = value; NotifyOfPropertyChange(() => IsLoading); }
         }
 
         public string ErrorMessage
@@ -67,6 +68,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
             IsLoading = true;
             try
             {
+                if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)) { return; }
+
                 var result = await _authService.AuthenticateAsync(Username, Password);
 
                 if (result.Success)
@@ -96,9 +99,12 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
                 ErrorMessage = "Error de conexión con el servidor";
                 // Log.Error(ex, "Error en Login");
             }
-            finally { IsLoading = false; }
+            finally
+            { 
+                IsLoading = false;
+            }
 
-            //if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password)) { return; }
+
 
             //var user = await _userService.Authenticate(Username, Password);
 
@@ -132,5 +138,16 @@ namespace ReparaStoreApp.WPF.ViewModels.Login
             //    //MessageBox.Show("Credenciales incorrectas", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             //}
         }
+
+        public async void OnPasswordKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Ejecutar la acción deseada (por ejemplo, iniciar sesión)
+                await Login();
+                //e.Handled = true;
+            }
+        }
+
     }
 }

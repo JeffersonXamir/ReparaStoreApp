@@ -51,26 +51,28 @@
                    Text="{Binding Username, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
 
                     <ui:PasswordBox PlaceholderText="Contraseña"  Margin="5"
-                       Password="{Binding Password, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
+                                    cal:Message.Attach="[Event KeyDown] = [Action OnPasswordKeyDown($eventArgs)]"
+                                    Password="{Binding Password, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
 
                     <ui:Button  Content="Ingresar" Margin="5 20 5 5"
-                            cal:Message.Attach="[Event Click] = [Action Login()]"
-                            HorizontalAlignment="Stretch"
-                            Appearance="Primary" ></ui:Button>
+                                cal:Message.Attach="[Event Click] = [Action Login()]"
+                                HorizontalAlignment="Stretch"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+                                Appearance="Primary" ></ui:Button>
 
                     <!-- Error Message -->
                     <TextBlock Grid.Row="5" 
-                   Text="{Binding ErrorMessage}" 
-                   Foreground="Red" 
-                   TextWrapping="Wrap"
-                   Margin="0,0,0,15"
-                   Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+                               Text="{Binding ErrorMessage}" 
+                               Foreground="Red" 
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Stretch"
+                               Margin="0,0,0,15"
+                               Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
 
                     <!-- Loading Indicator -->
-                    <ProgressBar Grid.Row="7" 
-                     IsIndeterminate="True" 
-                     Height="6"
-                     Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <ui:ProgressRing IsIndeterminate="True"
+                                     Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 </StackPanel>
             </Border>

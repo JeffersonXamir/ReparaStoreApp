@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.Common
 {
-    public abstract class Item: IItem
+    public abstract class Item: PropertyChangedBase, IItem
     {
         public int Id { get; set; }
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 
     public interface IItem

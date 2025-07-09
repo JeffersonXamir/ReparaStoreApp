@@ -57,14 +57,26 @@ namespace ReparaStoreApp.Data.Repositories.Login
         {
             if (user.Id == 0)
             {
-                await _context.Users.AddAsync(user);
+                _context.Users.Add(user);
             }
             else
             {
                 _context.Users.Update(user);
             }
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+        }
+
+        public async Task Delete(User user)
+        {
+            user.IsActive = false;
+            _context.SaveChanges();
+        }
+
+        public async Task Activate(User user)
+        {
+            user.IsActive = true;
+            _context.SaveChanges();
         }
     }
 }

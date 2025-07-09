@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.Core.Services.Login
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -46,15 +46,52 @@ namespace ReparaStoreApp.Core.Services.Login
             return await _userRepository.GetCountAsync(searchText);
         }
 
-        public async Task SaveUserAsync(User user)
+        public async Task SaveUserAsync(UserItem user)
         {
-            await _userRepository.SaveAsync(user);
+            if (user == null) return;
+            var userDb = _mapper.Map<User>(user);
+            userDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+            userDb.CreatedAt = DateTime.UtcNow;
+            userDb.IsActive = true;
+            await _userRepository.SaveAsync(userDb);
         }
 
         public async Task UpdateUserAsync(UserItem user)
         {
-            var userEntity = _mapper.Map<User>(user);
-            await _userRepository.SaveAsync(userEntity);
+            if (user == null) return;
+            var userDb = await _userRepository.GetByIdAsync(user.Id);
+
+            userDb.Code = user.Code;
+            userDb.Name = user.Name;
+            userDb.FirstName = user.FirstName;
+            userDb.LastName = user.LastName;
+            userDb.Email = user.Email;
+            userDb.PhoneNumber = user.PhoneNumber;
+            userDb.Note = user.Note;
+
+
+            // Verificar si el campo de contraseña tiene algo
+            if (!string.IsNullOrWhiteSpace(user.PasswordHash))
+            {
+                // Asumimos que se quiere cambiar la contraseña
+                userDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+            }
+
+            await _userRepository.SaveAsync(userDb);
+        }
+
+        public async Task ActivateUserAsync(UserItem user)
+        {
+            if (user == null) return;
+            var userDb = await _userRepository.GetByIdAsync(user.Id);
+            await _userRepository.Activate(userDb);
+        }
+
+        public async Task DeleteUserAsync(UserItem user)
+        {
+            if (user == null) return;
+            var userDb = await _userRepository.GetByIdAsync(user.Id);
+            await _userRepository.Delete(userDb);
         }
     }
 }

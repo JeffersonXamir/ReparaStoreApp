@@ -29,28 +29,43 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ui:Button">
-                            <Border x:Name="border" 
+                            <Border x:Name="border"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="4">
                                 <ContentPresenter x:Name="contentPresenter"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Margin="{TemplateBinding Padding}"/>
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}"/>
                             </Border>
                             <ControlTemplate.Triggers>
+                                <!-- Hover (mouse encima) -->
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}"/>
+                                    <Setter TargetName="border" Property="Background" Value="#FFE0E0E0"/>
+                                    <!-- Gris claro -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#FFB0B0B0"/>
+                                    <!-- Gris medio -->
                                 </Trigger>
+
+                                <!-- Pressed (clic presionado) -->
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}"/>
+                                    <Setter TargetName="border" Property="Background" Value="#FFD0D0D0"/>
+                                    <!-- Gris un poco más oscuro -->
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#FFA0A0A0"/>
+                                    <!-- Gris más oscuro -->
+                                </Trigger>
+
+                                <!-- Disabled state (opcional) -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.4"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

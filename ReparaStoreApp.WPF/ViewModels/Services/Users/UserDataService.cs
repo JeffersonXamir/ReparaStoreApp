@@ -37,11 +37,5 @@ namespace ReparaStoreApp.WPF.ViewModels.Services.Users
             var user = await _userService.GetUserByIdAsync(id);
             return _mapper.Map<UserItem>(user);
         }
-
-        public async Task SaveAsync(UserItem item)
-        {
-            var user = _mapper.Map<User>(item);
-            await _userService.SaveUserAsync(user);
-        }
     }
 }

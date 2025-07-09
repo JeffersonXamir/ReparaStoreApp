@@ -42,10 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Assets\Icons\ReparaStoreApp.ico" />
     <Resource Include="Assets\Images\imagen_background.jpg" />
     <Resource Include="Assets\Images\imagen_background_1.jpg" />

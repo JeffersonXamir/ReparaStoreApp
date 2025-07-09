@@ -67,6 +67,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Controls.GenericList
                 var data = await _dataService.SearchAsync(SearchText, CurrentPage, PageSize);
                 Items = new BindableCollection<TItem>(data);
                 TotalItems = await _dataService.GetTotalCountAsync(SearchText);
+
+                // Fix for CS8601: Ensure SelectedItem is not null by checking if Items has any elements
+                SelectedItem = Items.FirstOrDefault() ?? new TItem();
             }
             catch (UnauthorizedAccessException)
             {

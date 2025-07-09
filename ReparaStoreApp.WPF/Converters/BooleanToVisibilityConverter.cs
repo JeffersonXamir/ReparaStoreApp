@@ -13,7 +13,15 @@ namespace ReparaStoreApp.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
+            bool boolValue = value is bool b && b;
+
+            // Invertir si se pasa el parámetro "invert"
+            if (parameter != null && parameter.ToString()?.ToUpper() == "INVERT")
+            {
+                boolValue = !boolValue;
+            }
+
+            return boolValue ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -21,4 +29,5 @@ namespace ReparaStoreApp.WPF.Converters
             throw new NotImplementedException();
         }
     }
+
 }
