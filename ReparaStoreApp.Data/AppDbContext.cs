@@ -13,19 +13,6 @@ namespace ReparaStoreApp.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        //public DbSet<User> Users { get; set; }
-        //public DbSet<Role> Roles { get; set; }
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    // Configuraciones de modelo
-        //    modelBuilder.Entity<User>(entity =>
-        //    {
-        //        entity.HasIndex(e => e.Username).IsUnique();
-        //        entity.Property(e => e.PasswordHash).IsRequired();
-        //    });
-        //}
-
         #region DbSets
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }

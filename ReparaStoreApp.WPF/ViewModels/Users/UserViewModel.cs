@@ -96,21 +96,6 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
         }
 
 
-        private UserItem CloneUserItem(UserItem source)
-        {
-            return new UserItem
-            {
-                Id = source.Id,
-                Code = source.Code,
-                Name = source.Name,
-                //Email = source.Email
-                // Copiar todas las propiedades relevantes
-            };
-        }
-
-
-
-
         private async Task LoadUserDetails(int userId)
         {
             try
