@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using ReparaStoreApp.Security.Security;
+using ReparaStoreApp.WPF.ViewModels.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.Collections.ObjectModel;
@@ -51,7 +52,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         {
             // Menú principal
             MenuItems.Add(CreateNavigationItem("Inicio", SymbolRegular.Home24, typeof(HomeViewModel)));
-            MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(HomeViewModel)));
+            MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(ClientesViewModel)));
             MenuItems.Add(CreateNavigationItem("Productos", SymbolRegular.Box24, typeof(HomeViewModel)));
 
             // Menú de configuración (con subitems)

@@ -43,9 +43,8 @@ namespace ReparaStoreApp.Core.Services.ClientesService
         {
             if (Clientes == null) return;
             var ClientesDb = _mapper.Map<Clientes>(Clientes);
-            //ClientesDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(Clientes.PasswordHash);
-            //ClientesDb.CreatedAt = DateTime.UtcNow;
-            //ClientesDb.IsActive = true;
+            ClientesDb.FechaCreacion = DateTime.UtcNow;
+            ClientesDb.Activo = true;
             await _ClientesRepository.SaveAsync(ClientesDb);
         }
 
@@ -54,21 +53,20 @@ namespace ReparaStoreApp.Core.Services.ClientesService
             if (Clientes == null) return;
             var ClientesDb = await _ClientesRepository.GetByIdAsync(Clientes.Id);
 
-            //ClientesDb.Code = Clientes.Code;
-            //ClientesDb.Name = Clientes.Name;
-            //ClientesDb.FirstName = Clientes.FirstName;
-            //ClientesDb.LastName = Clientes.LastName;
-            //ClientesDb.Email = Clientes.Email;
-            //ClientesDb.PhoneNumber = Clientes.PhoneNumber;
-            //ClientesDb.Note = Clientes.Note;
+            ClientesDb.Codigo = Clientes.Code;
+            ClientesDb.Nombre = Clientes.Name;
+            ClientesDb.PrimerNombre = Clientes.PrimerNombre;
+            ClientesDb.SegundoNombre = Clientes.SegundoNombre;
+            ClientesDb.PrimerApellido = Clientes.PrimerApellido;
+            ClientesDb.SegundoApellido = Clientes.SegundoNombre;
+            ClientesDb.FechaNacimiento = Clientes.FechaNacimiento;
+            ClientesDb.Correo = Clientes.Correo;
+            ClientesDb.Telefono = Clientes.Telefono;
+            ClientesDb.Direccion = Clientes.Direccion;
+            ClientesDb.Nota = Clientes.Nota;
+            ClientesDb.UsuarioEdicionId = Clientes.UsuarioEdicionId;
+            ClientesDb.FechaEdicion = Clientes.FechaEdicion;
 
-
-            // Verificar si el campo de contraseña tiene algo
-            //if (!string.IsNullOrWhiteSpace(Clientes.PasswordHash))
-            //{
-            //    // Asumimos que se quiere cambiar la contraseña
-            //    ClientesDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(Clientes.PasswordHash);
-            //}
 
             await _ClientesRepository.SaveAsync(ClientesDb);
         }

@@ -2,16 +2,10 @@
 using Caliburn.Micro;
 using ReparaStoreApp.Common;
 using ReparaStoreApp.Common.Entities;
-using ReparaStoreApp.Core.Services.Login;
-using ReparaStoreApp.Security.Security;
+using ReparaStoreApp.Core.Services.ClientesService;
 using ReparaStoreApp.WPF.Models;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReparaStoreApp.WPF.ViewModels.Clientes
 {
@@ -19,28 +13,28 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
     {
         private readonly IWindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IUserService _userService;
-        private readonly IDataService<UserItem> _userDataService;
+        private readonly IClientesService _ClientesService;
+        private readonly IDataService<ClientesItem> _ClientesDataService;
         private readonly IMapper _mapper;
-        private readonly GenericListViewModel<UserItem> _userListViewModel;
-        public GenericListViewModel<UserItem> UserList => _userListViewModel;
+        private readonly GenericListViewModel<ClientesItem> _ClientesListViewModel;
+        public GenericListViewModel<ClientesItem> ClientesList => _ClientesListViewModel;
 
-        private UserItem _currentUser;
-        public UserItem CurrentUser
+        private ClientesItem _currentClientes;
+        public ClientesItem CurrentClientes
         {
-            get => _currentUser;
+            get => _currentClientes;
             set
             {
-                _currentUser = value;
-                _editCopy = value != null ? (UserItem)CurrentUser.Clone() : new UserItem();
+                _currentClientes = value;
+                _editCopy = value != null ? (ClientesItem)CurrentClientes.Clone() : new ClientesItem();
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(() => EditCopy);
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
             }
         }
 
-        private UserItem _editCopy;
-        public UserItem EditCopy
+        private ClientesItem _editCopy;
+        public ClientesItem EditCopy
         {
             get => _editCopy;
             set
@@ -54,37 +48,37 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         public ClientesViewModel(
                             IWindowManager windowManager,
                             IEventAggregator eventAggregator,
-                            IDataService<UserItem> userDataService,
-                            IUserService userService,
+                            IDataService<ClientesItem> ClientesDataService,
+                            IClientesService ClientesService,
                             IMapper mapper) : base(eventAggregator)
         {
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
-            _userDataService = userDataService;
-            _userService = userService;
+            _ClientesDataService = ClientesDataService;
+            _ClientesService = ClientesService;
             _mapper = mapper;
 
-            _userListViewModel = new GenericListViewModel<UserItem>(eventAggregator, userDataService, mapper)
+            _ClientesListViewModel = new GenericListViewModel<ClientesItem>(eventAggregator, ClientesDataService, mapper)
             {
-                DisplayMemberPath = nameof(UserItem.Name),
-                CodeMemberPath = nameof(UserItem.Code),
+                DisplayMemberPath = nameof(ClientesItem.Name),
+                CodeMemberPath = nameof(ClientesItem.Code),
                 PageSize = 15,
-                SearchFunction = async (searchText) => await _userDataService.SearchAsync(searchText, 1, 15),
+                SearchFunction = async (searchText) => await _ClientesDataService.SearchAsync(searchText, 1, 15),
 
                 // Configurar el manejador de selección personalizado
                 OnItemSelected = async (selectedItem) =>
                 {
-                    CurrentUser = selectedItem;
-                    await LoadUserDetails(selectedItem.Id);
+                    CurrentClientes = selectedItem;
+                    await LoadClientesDetails(selectedItem.Id);
                 }
             };
         }
 
-        private async Task LoadUserDetails(int userId)
+        private async Task LoadClientesDetails(int ClientesId)
         {
             try
             {
-                var userDetails = await _userDataService.GetByIdAsync(userId);
+                var ClientesDetails = await _ClientesDataService.GetByIdAsync(ClientesId);
                 // Actualiza las propiedades necesarias aquí
             }
             catch (Exception ex)
@@ -105,13 +99,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
 
                 // Deshabilitar la lista durante la edición
-                _userListViewModel.IsListEnabled = false;
+                _ClientesListViewModel.IsListEnabled = false;
 
-                EditCopy = new UserItem(); // Crear una copia vacía para edición
+                EditCopy = new ClientesItem(); // Crear una copia vacía para edición
                 EditCopy.Id = 0;
 
                 // Lógica específica para nuevo usuario
-                // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
+                // Ejemplo: _windowManager.ShowDialogAsync(new NewClientesViewModel());
             }
             catch (Exception ex)
             {
@@ -128,10 +122,10 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 EditMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
                 // Deshabilitar la lista durante la edición
-                _userListViewModel.IsListEnabled = false;
+                _ClientesListViewModel.IsListEnabled = false;
 
                 // Lógica específica para nuevo usuario
-                // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());
+                // Ejemplo: _windowManager.ShowDialogAsync(new NewClientesViewModel());
             }
             catch (Exception ex)
             {
@@ -155,15 +149,15 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 if (CreationMode)
                 {
                     // Lógica para nuevo usuario
-                    await _userService.SaveUserAsync(EditCopy);
+                    await _ClientesService.SaveClientesAsync(EditCopy);
 
                     await ShowNotification("Usuario creado exitosamente");
                 }
                 else if (EditMode)
                 {
                     // Lógica para edición
-                    await _userService.UpdateUserAsync(EditCopy);
-                    CurrentUser = EditCopy; // Actualizar el original
+                    await _ClientesService.UpdateClientesAsync(EditCopy);
+                    CurrentClientes = EditCopy; // Actualizar el original
                     await ShowNotificationMessage("Usuario actualizado exitosamente");
                     await ShowNotification("Usuario actualizado exitosamente");
                 }
@@ -171,8 +165,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 // Finalizar modo
                 CreationMode = false;
                 EditMode = false;
-                _userListViewModel.IsListEnabled = true;
-                await _userListViewModel.LoadData();
+                _ClientesListViewModel.IsListEnabled = true;
+                await _ClientesListViewModel.LoadData();
                 await base.Create();
             }
             catch (Exception ex)
@@ -190,9 +184,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         {
             try
             {
-                await _userService.ActivateUserAsync(EditCopy);
-                EditCopy.IsActive = true;
-                CurrentUser.IsActive = true;
+                await _ClientesService.ActivateClientesAsync(EditCopy);
+                EditCopy.Activo = true;
+                CurrentClientes.Activo = true;
                 await ShowNotificationMessage("Registro activado exitosamente");
             }
             catch (Exception ex)
@@ -206,9 +200,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         {
             try
             {
-                await _userService.DeleteUserAsync(EditCopy);
-                EditCopy.IsActive = false;
-                CurrentUser.IsActive = false;
+                await _ClientesService.DeleteClientesAsync(EditCopy);
+                EditCopy.Activo = false;
+                CurrentClientes.Activo = false;
                 await ShowNotificationMessage("Registro desactivado exitosamente");
             }
             catch (Exception ex)
@@ -222,21 +216,21 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         public override Task Undo()
         {
             // Restaurar valores originales
-            if (CurrentUser != null)
+            if (CurrentClientes != null)
             {
-                EditCopy = (UserItem)CurrentUser.Clone();
+                EditCopy = (ClientesItem)CurrentClientes.Clone();
             }
 
             CreationMode = false;
             EditMode = false;
-            _userListViewModel.IsListEnabled = true;
+            _ClientesListViewModel.IsListEnabled = true;
 
             return base.Undo();
         }
 
         public override async Task Update()
         {
-            await _userListViewModel.LoadData();
+            await _ClientesListViewModel.LoadData();
             await base.Update();
         }
 
@@ -264,22 +258,22 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                     return validateForm;
                 }
 
-                if (string.IsNullOrEmpty(EditCopy.PhoneNumber))
+                if (string.IsNullOrEmpty(EditCopy.Telefono))
                 {
                     validateForm.Success = false;
                     validateForm.ErrorMessage = "El número telefonico del usuario es obligatorio.";
                     return validateForm;
                 }
 
-                if (CreationMode)
-                {
-                    if (string.IsNullOrEmpty(EditCopy.PasswordHash))
-                    {
-                        validateForm.Success = false;
-                        validateForm.ErrorMessage = "La contraseña del usuario es obligatorio.";
-                        return validateForm;
-                    }
-                }
+                //if (CreationMode)
+                //{
+                //    if (string.IsNullOrEmpty(EditCopy.PasswordHash))
+                //    {
+                //        validateForm.Success = false;
+                //        validateForm.ErrorMessage = "La contraseña del usuario es obligatorio.";
+                //        return validateForm;
+                //    }
+                //}
 
                 return validateForm;
             }
