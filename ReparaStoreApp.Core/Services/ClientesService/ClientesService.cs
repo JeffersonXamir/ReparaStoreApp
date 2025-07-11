@@ -55,10 +55,11 @@ namespace ReparaStoreApp.Core.Services.ClientesService
 
             ClientesDb.Codigo = Clientes.Code;
             ClientesDb.Nombre = Clientes.Name;
+            ClientesDb.Identificacion = Clientes.Identificacion;
             ClientesDb.PrimerNombre = Clientes.PrimerNombre;
             ClientesDb.SegundoNombre = Clientes.SegundoNombre;
             ClientesDb.PrimerApellido = Clientes.PrimerApellido;
-            ClientesDb.SegundoApellido = Clientes.SegundoNombre;
+            ClientesDb.SegundoApellido = Clientes.SegundoApellido;
             ClientesDb.FechaNacimiento = Clientes.FechaNacimiento;
             ClientesDb.Correo = Clientes.Correo;
             ClientesDb.Telefono = Clientes.Telefono;

@@ -3,9 +3,12 @@ using Caliburn.Micro;
 using ReparaStoreApp.Common;
 using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Core.Services.ClientesService;
+using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.WPF.Models;
+using ReparaStoreApp.WPF.Properties;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
+using System.Configuration;
 
 namespace ReparaStoreApp.WPF.ViewModels.Clientes
 {
@@ -51,7 +54,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         public DateTime FechaActual
         {
             get { return _fechaActual; }
-            set { _fechaActual = value; NotifyOfPropertyChange(()=> FechaActual); }
+            set { _fechaActual = value; NotifyOfPropertyChange(() => FechaActual); }
         }
 
         public ClientesViewModel(
@@ -110,12 +113,14 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 // Deshabilitar la lista durante la edición
                 _ClientesListViewModel.IsListEnabled = false;
 
+                var settings = new Settings();
+                int userId = settings.UserId;
+
                 EditCopy = new ClientesItem(); // Crear una copia vacía para edición
                 EditCopy.Id = 0;
                 EditCopy.FechaNacimiento = new DateTime(1990, 1, 1);
+                EditCopy.UsuarioCreadorId = userId;
 
-                // Lógica específica para nuevo usuario
-                // Ejemplo: _windowManager.ShowDialogAsync(new NewClientesViewModel());
             }
             catch (Exception ex)
             {
@@ -134,8 +139,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 // Deshabilitar la lista durante la edición
                 _ClientesListViewModel.IsListEnabled = false;
 
-                // Lógica específica para nuevo usuario
-                // Ejemplo: _windowManager.ShowDialogAsync(new NewClientesViewModel());
+                var settings = new Settings();
+                int userId = settings.UserId;
+                EditCopy.UsuarioEdicionId = userId;
             }
             catch (Exception ex)
             {
@@ -149,7 +155,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
             {
                 IsBusy = true;
 
-                
+
 
                 var validateForm = await ValidateForm();
                 if (!validateForm.Success)
@@ -299,6 +305,25 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        public async Task FormatNombres()
+        {
+            try
+            {
+                if (EditCopy == null) { return; }
+
+                var PrimerNombre = (EditCopy?.PrimerNombre ?? "").Trim();
+                var SegundoNombre = (EditCopy?.SegundoNombre ?? "").Trim();
+                var PrimerApellido = (EditCopy?.PrimerApellido ?? "").Trim();
+                var SegundoApellido = (EditCopy?.SegundoApellido ?? "").Trim();
+
+                EditCopy.Name = $"{PrimerNombre} {SegundoNombre} {PrimerApellido} {SegundoApellido}";
+            }
+            catch (Exception)
+            {
+
             }
         }
     }

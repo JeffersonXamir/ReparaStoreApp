@@ -7,6 +7,7 @@
              mc:Ignorable="d"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:behaviors="clr-namespace:ReparaStoreApp.WPF.Behaviors"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -44,6 +45,7 @@
 
                             <Grid Margin="0,5">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -89,42 +91,22 @@
                                             IsEnabled="{Binding IsInEditOrCreationMode}"
                                             Margin="5" />
 
-                                <!-- Nombres -->
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="0"
-                                           Text="Nombres:"
+                                           Text="Identificación:"
                                            Margin="5"
                                            VerticalAlignment="Center" />
+                                <ui:TextBox Grid.Row="3"
+                                            Grid.Column="1"
+                                            Text="{Binding EditCopy.Identificacion}" MaxLength="13"
+                                            IsEnabled="{Binding IsInEditOrCreationMode}"
+                                            behaviors:TextBoxInputBehavior.OnlyNumbers="True"
+                                            Margin="5" />
 
-                                <Grid Grid.Row="3"
-                                      Grid.Column="1"
-                                      Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <ui:TextBox Grid.Column="0"
-                                                MinWidth="100"
-                                                Margin="0,0,5,0"
-                                                Text="{Binding EditCopy.PrimerNombre}"
-                                                IsEnabled="{Binding IsInEditOrCreationMode}"
-                                                PlaceholderText="Primer nombre"
-                                                HorizontalAlignment="Stretch" />
-
-                                    <ui:TextBox Grid.Column="1"
-                                                MinWidth="100"
-                                                Margin="0"
-                                                Text="{Binding EditCopy.SegundoNombre}"
-                                                IsEnabled="{Binding IsInEditOrCreationMode}"
-                                                PlaceholderText="Segundo nombre"
-                                                HorizontalAlignment="Stretch" />
-                                </Grid>
-
-                                <!-- Apellidos -->
+                                <!-- Nombres -->
                                 <TextBlock Grid.Row="4"
                                            Grid.Column="0"
-                                           Text="Apellidos:"
+                                           Text="Nombres:"
                                            Margin="5"
                                            VerticalAlignment="Center" />
 
@@ -139,8 +121,43 @@
                                     <ui:TextBox Grid.Column="0"
                                                 MinWidth="100"
                                                 Margin="0,0,5,0"
+                                                Text="{Binding EditCopy.PrimerNombre}"
+                                                IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                cal:Message.Attach="[Event TextChanged] = [Action FormatNombres()]" 
+                                                PlaceholderText="Primer nombre"
+                                                HorizontalAlignment="Stretch" />
+
+                                    <ui:TextBox Grid.Column="1"
+                                                MinWidth="100"
+                                                Margin="0"
+                                                Text="{Binding EditCopy.SegundoNombre}"
+                                                IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                cal:Message.Attach="[Event TextChanged] = [Action FormatNombres()]" 
+                                                PlaceholderText="Segundo nombre"
+                                                HorizontalAlignment="Stretch" />
+                                </Grid>
+
+                                <!-- Apellidos -->
+                                <TextBlock Grid.Row="5"
+                                           Grid.Column="0"
+                                           Text="Apellidos:"
+                                           Margin="5"
+                                           VerticalAlignment="Center" />
+
+                                <Grid Grid.Row="5"
+                                      Grid.Column="1"
+                                      Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ui:TextBox Grid.Column="0"
+                                                MinWidth="100"
+                                                Margin="0,0,5,0"
                                                 Text="{Binding EditCopy.PrimerApellido}"
                                                 IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                cal:Message.Attach="[Event TextChanged] = [Action FormatNombres()]" 
                                                 PlaceholderText="Primer apellido"
                                                 HorizontalAlignment="Stretch" />
 
@@ -149,6 +166,7 @@
                                                 Margin="0"
                                                 Text="{Binding EditCopy.SegundoApellido}"
                                                 IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                cal:Message.Attach="[Event TextChanged] = [Action FormatNombres()]" 
                                                 PlaceholderText="Segundo apellido"
                                                 HorizontalAlignment="Stretch" />
                                 </Grid>
@@ -212,6 +230,7 @@
                                             Grid.Column="1"
                                             Text="{Binding EditCopy.Telefono}"
                                             IsEnabled="{Binding IsInEditOrCreationMode}"
+                                            behaviors:TextBoxInputBehavior.OnlyNumbers="True" MaxLength="10"
                                             Margin="5" />
 
                                 <TextBlock Grid.Row="3"
@@ -284,7 +303,7 @@
                                                  IsChecked="{Binding EditCopy.Activo}"
                                                  OffContent="Inactivo"
                                                  OnContent="Activo"
-                                                 IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                 IsEnabled="False"
                                                  Margin="5"
                                                  VerticalAlignment="Center" />
 
@@ -323,6 +342,17 @@
                             </Grid>
                         </StackPanel>
                     </ui:Card>
+
+                    <ui:Card Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <ui:Button  Content="Activar" Margin="5 20 5 5"
+                                    Width="250" 
+                                    cal:Message.Attach="[Event Click] = [Action Activate()]"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Visibility="{Binding EditCopy.Activo, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=INVERT}"
+                                    Appearance="Primary" ></ui:Button>
+                    </ui:Card>
+
                 </StackPanel>
             </ui:Card>
         </ScrollViewer>

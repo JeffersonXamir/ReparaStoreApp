@@ -6,6 +6,7 @@ using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.Models;
+using ReparaStoreApp.WPF.Properties;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
 using System;
@@ -123,8 +124,12 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                 // Deshabilitar la lista durante la edición
                 _userListViewModel.IsListEnabled = false;
 
+                var settings = new Settings();
+                int userId = settings.UserId;
+
                 EditCopy = new UserItem(); // Crear una copia vacía para edición
                 EditCopy.Id = 0;
+                //EditCopy.UsuarioCreadorId = userId;
 
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());

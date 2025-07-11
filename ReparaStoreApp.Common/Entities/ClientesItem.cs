@@ -11,10 +11,61 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class ClientesItem : Item
     {
-        public string PrimerNombre { get; set; }
-        public string SegundoNombre { get; set; }
-        public string PrimerApellido { get; set; }
-        public string SegundoApellido { get; set; }
+        private string _identificacion;
+        public string Identificacion
+        {
+            get => _identificacion;
+            set
+            {
+                _identificacion = value;
+                NotifyOfPropertyChange(() => Identificacion);
+            }
+        }
+
+        private string _primerNombre;
+        public string PrimerNombre
+        {
+            get => _primerNombre;
+            set
+            {
+                _primerNombre = value;
+                NotifyOfPropertyChange(() => PrimerNombre);
+            }
+        }
+
+        private string _segundoNombre;
+        public string SegundoNombre
+        {
+            get => _segundoNombre;
+            set
+            {
+                _segundoNombre = value;
+                NotifyOfPropertyChange(() => SegundoNombre);
+            }
+        }
+
+        private string _primerApellido;
+        public string PrimerApellido
+        {
+            get => _primerApellido;
+            set
+            {
+                _primerApellido = value;
+                NotifyOfPropertyChange(() => PrimerApellido);
+            }
+        }
+
+        private string _segundoApellido;
+        public string SegundoApellido
+        {
+            get => _segundoApellido;
+            set
+            {
+                _segundoApellido = value;
+                NotifyOfPropertyChange(() => SegundoApellido);
+            }
+        }
+
 
         private DateTime _fechaNacimiento;
         public DateTime FechaNacimiento
@@ -33,7 +84,15 @@ namespace ReparaStoreApp.Common.Entities
         public DateTime FechaEdicion { get; set; }
         public int? UsuarioEdicionId { get; set; }
         public User UsuarioEdicion { get; set; }
-        public bool Activo { get; set; }
+        //public bool Activo { get; set; }
+        
+        private bool _activo;
+        public bool Activo
+        {
+            get { return _activo; }
+            set { _activo = value; NotifyOfPropertyChange(()=> Activo); }
+        }
+
 
         //public ICollection<Dispositivos> Dispositivos { get; set; }
     }
