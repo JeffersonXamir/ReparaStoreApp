@@ -8,51 +8,58 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
 
-    <Grid Margin="20">
-        <!-- Tarjeta principal -->
-        <ui:CardControl Margin="0,0,0,20" Padding="20">
-            <StackPanel>
-                <ui:TextBlock Text="{Binding Titulo}" FontTypography="Title" Margin="10"/>
-                
-                <ui:TextBlock Text="Bienvenido a ReparaStore" 
-                           FontTypography="Title"
-                           Margin="0,0,0,10"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="20" HorizontalAlignment="Left">
+            <ui:CardControl Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
 
-                <ui:TextBlock Text="{Binding WelcomeMessage}" 
-                           FontTypography="Subtitle" 
-                           Margin="0,0,0,20"/>
+                    <!-- Imagen del escudo -->
+                    <Border Grid.Column="0" 
+                            Margin="0,0,20,0"
+                            Background="Transparent"
+                            VerticalAlignment="Center"
+                            Height="Auto">
+                        <Image Source="/Assets/Images/UG_2025.PNG"
+                               Stretch="Fill"
+                               MaxHeight="650"
+                               MaxWidth="842"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"/>
+                    </Border>
 
-                <ui:Button Content="Ver Estadísticas" 
-                       Appearance="Primary"
-                       cal:Message.Attach="[Event Click] = [Action ShowStatistics]"/>
-            </StackPanel>
-        </ui:CardControl>
+                    <!-- Lista de nombres -->
+                    <StackPanel Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Margin="0">
+                        <ui:TextBlock Text="Alumnos Grupo 5:"
+                                      FontTypography="Subtitle"
+                                      Margin="0,0,0,10"/>
 
-        <!-- Sección de estadísticas rápidas -->
-        <ItemsControl ItemsSource="{Binding QuickStats}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="3" Margin="0,20,0,0"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ui:CardControl Margin="5" Padding="15">
-                        <StackPanel>
-                            <ui:TextBlock Text="{Binding Title}" 
-                                       FontTypography="Subtitle"
-                                       Margin="0,0,0,5"/>
-                            <ui:TextBlock Text="{Binding Value}" 
-                                       FontTypography="Title"
-                                       FontSize="24"
-                                       Margin="0,0,0,5"/>
-                            <ui:TextBlock Text="{Binding Description}" 
-                                       FontTypography="Caption"
-                                        />
-                        </StackPanel>
-                    </ui:CardControl>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+                        <ItemsControl>
+                            <ItemsControl.Items>
+                                <ui:TextBlock Text="Elías Hernán Vera Landázuri" Margin="2"/>
+                                <ui:TextBlock Text="Ronny Andrés Sánchez Moriel" Margin="2"/>
+                                <ui:TextBlock Text="Joel Reinaldo Quimis Choez" Margin="2"/>
+                                <ui:TextBlock Text="Jefferson Xamir Anchundia Peñaherrera" Margin="2"/>
+                                <ui:TextBlock Text="Jostin Enrique Barros Intriago" Margin="2"/>
+                                <ui:TextBlock Text="Viviana Amarilis Salinas Rosero" Margin="2"/>
+                                <ui:TextBlock Text="José Manuel León Carrera" Margin="2"/>
+                                <ui:TextBlock Text="Hidalgo Goyes Katherine Stefanie" Margin="2"/>
+                            </ItemsControl.Items>
+                        </ItemsControl>
+
+                        <ui:TextBlock Text="Profesor:"
+                                      FontTypography="Subtitle"
+                                      Margin="20,10,0,0"/>
+                        <ui:TextBlock Text="Ing. Sarmiento Lavayen Roberto Carlos"
+                                      Margin="2"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardControl>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

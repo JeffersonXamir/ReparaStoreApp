@@ -1,13 +1,8 @@
-﻿using ReparaStoreApp.Common.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using AutoMapper;
-using ReparaStoreApp.Entities.Models.Security;
+﻿using AutoMapper;
+using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Entities.Models.Cliente;
+using ReparaStoreApp.Entities.Models.Dispositivo;
+using ReparaStoreApp.Entities.Models.Security;
 
 namespace ReparaStoreApp.Common.Mappings
 {
@@ -35,6 +30,16 @@ namespace ReparaStoreApp.Common.Mappings
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
 
             CreateMap<ClientesItem, Clientes>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<Dispositivos, DispositivosItem>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Codigo))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
+
+            CreateMap<DispositivosItem, Dispositivos>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));

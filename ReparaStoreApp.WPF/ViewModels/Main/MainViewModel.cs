@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
+using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
+using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -53,6 +55,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             // Menú principal
             MenuItems.Add(CreateNavigationItem("Inicio", SymbolRegular.Home24, typeof(HomeViewModel)));
             MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(ClientesViewModel)));
+            MenuItems.Add(CreateNavigationItem("Dispositivos", SymbolRegular.Phone24, typeof(DispositivosViewModel)));
             MenuItems.Add(CreateNavigationItem("Productos", SymbolRegular.Box24, typeof(HomeViewModel)));
 
             // Menú de configuración (con subitems)
@@ -69,7 +72,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             MenuItems.Add(settingsItem);
 
             // Menú footer
-            FooterMenuItems.Add(CreateNavigationItem("Cerrar Sesión", SymbolRegular.SignOut24, typeof(HomeViewModel)));
+            FooterMenuItems.Add(CreateNavigationItem("Cerrar Sesión", SymbolRegular.SignOut24, typeof(LogOutViewModel)));
         }
 
         private NavigationViewItem CreateNavigationItem(string title, SymbolRegular icon, Type viewModelType)

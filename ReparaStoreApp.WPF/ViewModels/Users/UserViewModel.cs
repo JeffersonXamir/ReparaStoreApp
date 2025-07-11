@@ -251,7 +251,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             CreationMode = false;
             EditMode = false;
             _userListViewModel.IsListEnabled = true;
-
+            NotifyOfPropertyChange(() => IsInEditOrCreationMode);
             return base.Undo();
         }
 

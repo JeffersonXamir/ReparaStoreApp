@@ -5,9 +5,11 @@ using Microsoft.Extensions.Configuration;
 using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Common.Mappings;
 using ReparaStoreApp.Core.Services.ClientesService;
+using ReparaStoreApp.Core.Services.DispositivosService;
 using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Data;
 using ReparaStoreApp.Data.Repositories.ClientesRepository;
+using ReparaStoreApp.Data.Repositories.DispositivosRepository;
 using ReparaStoreApp.Data.Repositories.Login;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security;
@@ -15,10 +17,12 @@ using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
+using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
 using ReparaStoreApp.WPF.ViewModels.Services.Clientes;
+using ReparaStoreApp.WPF.ViewModels.Services.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.ComponentModel;
@@ -89,21 +93,27 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IUserRepository, UserRepository>()
                 .Singleton<IUserService, UserService>()
                 .Singleton<IClientesRepository, ClientesRepository>()
-                .Singleton<IClientesService, ClientesService>();
+                .Singleton<IClientesService, ClientesService>()
+                .Singleton<IDispositivosRepository, DispositivosRepository>()
+                .Singleton<IDispositivosService, DispositivosService>();
 
             // Nuevos servicios para el listado genérico
             _container.PerRequest<IDataService<UserItem>, UserDataService>();
             _container.PerRequest<GenericListViewModel<UserItem>>(); // ¡Esta línea es crucial!
             _container.PerRequest<IDataService<ClientesItem>, ClientesDataService>();
             _container.PerRequest<GenericListViewModel<ClientesItem>>();
+            _container.PerRequest<IDataService<DispositivosItem>, DispositivosDataService>();
+            _container.PerRequest<GenericListViewModel<DispositivosItem>>();
 
             // Registra tus ViewModels aquí
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<LoginViewModel>()
+                .PerRequest<LogOutViewModel>()
                 .PerRequest<MainViewModel>()
                 .PerRequest<HomeViewModel>()
                 .PerRequest<ClientesViewModel>()
+                .PerRequest<DispositivosViewModel>()
                 .PerRequest<UserViewModel>();
         }
 
