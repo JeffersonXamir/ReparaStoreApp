@@ -14,6 +14,7 @@ namespace ReparaStoreApp.Entities.Models.Cliente
         public int Id { get; set; }
         public string Codigo { get; set; }
         public string Nombre { get; set; }
+        public string Identificacion { get; set; }
         public string PrimerNombre { get; set; }
         public string SegundoNombre { get; set; }
         public string PrimerApellido { get; set; }

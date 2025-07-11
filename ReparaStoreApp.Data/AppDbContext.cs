@@ -110,10 +110,13 @@ namespace ReparaStoreApp.Data
             #region Configuración de Cliente
             modelBuilder.Entity<Clientes>(entity =>
             {
-                entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Nombre).IsRequired().HasMaxLength(300);
+                entity.Property(e => e.Identificacion).IsRequired().HasMaxLength(13);
                 entity.Property(e => e.Correo).HasMaxLength(100);
                 entity.Property(e => e.Telefono).IsRequired().HasMaxLength(20);
-                entity.Property(e => e.Direccion).HasMaxLength(500);
+                entity.Property(e => e.Direccion).HasMaxLength(1024);
+                entity.Property(e => e.Nota).HasMaxLength(1024);
                 entity.Property(e => e.FechaCreacion).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(e => e.Activo).HasDefaultValue(true);
             });
