@@ -153,22 +153,28 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- TextBlock con binding seguro -->
-                <TextBlock Text="{Binding ActiveItem.StatusMessage, FallbackValue='', TargetNullValue=''}" 
-               Margin="5,0"
-               VerticalAlignment="Center"/>
+                <!-- TextBlock: Una sola línea con corte (ellipsis) al final -->
+                <TextBlock Grid.Column="0"
+                   Text="{Binding ActiveItem.StatusMessage, FallbackValue='', TargetNullValue=''}"
+                   Margin="5,0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   TextTrimming="CharacterEllipsis"
+                   TextWrapping="NoWrap" />
 
-                <!-- ProgressRing con binding seguro -->
+                <!-- ProgressRing alineado a la derecha -->
                 <ui:ProgressRing Grid.Column="1"
-                      IsIndeterminate="True" 
-                      Visibility="{Binding ActiveItem.IsBusy, 
-                                  Converter={StaticResource BooleanToVisibilityConverter},
-                                  FallbackValue=Collapsed,
-                                  TargetNullValue=Collapsed}"
-                      Width="16" 
-                      Height="16"
-                      Margin="0,0,5,0"/>
+                         IsIndeterminate="True"
+                         Width="16"
+                         Height="16"
+                         Margin="5,0,5,0"
+                         VerticalAlignment="Center"
+                         Visibility="{Binding ActiveItem.IsBusy,
+                                              Converter={StaticResource BooleanToVisibilityConverter},
+                                              FallbackValue=Collapsed,
+                                              TargetNullValue=Collapsed}" />
             </Grid>
         </ui:CardControl>
+
     </Grid>
 </UserControl>

@@ -45,6 +45,15 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
         }
 
         public bool IsInEditOrCreationMode => CreationMode || EditMode;
+
+        private DateTime _fechaActual;
+
+        public DateTime FechaActual
+        {
+            get { return _fechaActual; }
+            set { _fechaActual = value; NotifyOfPropertyChange(()=> FechaActual); }
+        }
+
         public ClientesViewModel(
                             IWindowManager windowManager,
                             IEventAggregator eventAggregator,
@@ -103,6 +112,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
 
                 EditCopy = new ClientesItem(); // Crear una copia vacía para edición
                 EditCopy.Id = 0;
+                EditCopy.FechaNacimiento = new DateTime(1990, 1, 1);
 
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewClientesViewModel());
@@ -138,6 +148,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
             try
             {
                 IsBusy = true;
+
+                
 
                 var validateForm = await ValidateForm();
                 if (!validateForm.Success)

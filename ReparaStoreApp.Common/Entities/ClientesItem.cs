@@ -15,7 +15,14 @@ namespace ReparaStoreApp.Common.Entities
         public string SegundoNombre { get; set; }
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
-        public DateTime FechaNacimiento { get; set; }
+
+        private DateTime _fechaNacimiento;
+        public DateTime FechaNacimiento
+        {
+            get { return _fechaNacimiento; }
+            set { _fechaNacimiento = value; NotifyOfPropertyChange(()=> FechaNacimiento); }
+        }
+
         public string Correo { get; set; }
         public string Telefono { get; set; }
         public string Direccion { get; set; }
