@@ -24,11 +24,13 @@ using ReparaStoreApp.WPF.ViewModels.Main;
 using ReparaStoreApp.WPF.ViewModels.Services.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Services.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
+using ReparaStoreApp.WPF.ViewModels.Configuracion;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Xml.Linq;
+using Wpf.Ui;
 
 namespace ReparaStoreApp.WPF
 {
@@ -87,6 +89,7 @@ namespace ReparaStoreApp.WPF
 
             // 3. Configuración de servicios
             _container
+                .Singleton<IThemeService, ThemeService>()
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
                 .Singleton<IAuthService, AuthService>()
@@ -114,6 +117,7 @@ namespace ReparaStoreApp.WPF
                 .PerRequest<HomeViewModel>()
                 .PerRequest<ClientesViewModel>()
                 .PerRequest<DispositivosViewModel>()
+                .PerRequest<SettingsViewModel>()
                 .PerRequest<UserViewModel>();
         }
 

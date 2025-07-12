@@ -101,7 +101,7 @@
                        FooterMenuItemsSource="{Binding FooterMenuItems}"
                        cal:Message.Attach="[Event SelectionChanged] = [Action OnNavigationChanged($source)]">
 
-                <ui:NavigationView.AutoSuggestBox>
+                <!--<ui:NavigationView.AutoSuggestBox>
                     <ui:AutoSuggestBox PlaceholderText="Buscar...">
                         <ui:AutoSuggestBox.Icon>
                             <ui:IconSourceElement>
@@ -109,9 +109,21 @@
                             </ui:IconSourceElement>
                         </ui:AutoSuggestBox.Icon>
                     </ui:AutoSuggestBox>
+                </ui:NavigationView.AutoSuggestBox>-->
+
+                <ui:NavigationView.AutoSuggestBox>
+                    <ui:AutoSuggestBox
+                        PlaceholderText="Buscar..."
+                        Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <ui:AutoSuggestBox.Icon>
+                            <ui:IconSourceElement>
+                                <ui:SymbolIconSource Symbol='Search24' />
+                            </ui:IconSourceElement>
+                        </ui:AutoSuggestBox.Icon>
+                    </ui:AutoSuggestBox>
                 </ui:NavigationView.AutoSuggestBox>
 
-                <ui:NavigationView.PaneHeader>
+                <!--<ui:NavigationView.PaneHeader>
                     <Border
                     Margin="0,0,0,8"
                     Background="{DynamicResource StripedBackgroundBrush}"
@@ -137,7 +149,7 @@
                         Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
                         Text="Pane Footer" />
                     </Border>
-                </ui:NavigationView.PaneFooter>
+                </ui:NavigationView.PaneFooter>-->
             </ui:NavigationView>
 
             <!-- Área de contenido -->

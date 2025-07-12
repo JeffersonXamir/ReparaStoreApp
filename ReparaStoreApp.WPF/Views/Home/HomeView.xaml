@@ -8,58 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="20" HorizontalAlignment="Left">
-            <ui:CardControl Padding="20">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Imagen del escudo -->
-                    <Border Grid.Column="0" 
-                            Margin="0,0,20,0"
-                            Background="Transparent"
-                            VerticalAlignment="Center"
-                            Height="Auto">
-                        <Image Source="/Assets/Images/UG_2025.PNG"
-                               Stretch="Fill"
-                               MaxHeight="650"
-                               MaxWidth="842"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"/>
-                    </Border>
-
-                    <!-- Lista de nombres -->
-                    <StackPanel Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Margin="0">
-                        <ui:TextBlock Text="Alumnos Grupo 5:"
-                                      FontTypography="Subtitle"
-                                      Margin="0,0,0,10"/>
-
-                        <ItemsControl>
-                            <ItemsControl.Items>
-                                <ui:TextBlock Text="Elías Hernán Vera Landázuri" Margin="2"/>
-                                <ui:TextBlock Text="Ronny Andrés Sánchez Moriel" Margin="2"/>
-                                <ui:TextBlock Text="Joel Reinaldo Quimis Choez" Margin="2"/>
-                                <ui:TextBlock Text="Jefferson Xamir Anchundia Peñaherrera" Margin="2"/>
-                                <ui:TextBlock Text="Jostin Enrique Barros Intriago" Margin="2"/>
-                                <ui:TextBlock Text="Viviana Amarilis Salinas Rosero" Margin="2"/>
-                                <ui:TextBlock Text="José Manuel León Carrera" Margin="2"/>
-                                <ui:TextBlock Text="Hidalgo Goyes Katherine Stefanie" Margin="2"/>
-                            </ItemsControl.Items>
-                        </ItemsControl>
-
-                        <ui:TextBlock Text="Profesor:"
-                                      FontTypography="Subtitle"
-                                      Margin="20,10,0,0"/>
-                        <ui:TextBlock Text="Ing. Sarmiento Lavayen Roberto Carlos"
-                                      Margin="2"/>
-                    </StackPanel>
-                </Grid>
-            </ui:CardControl>
-        </Grid>
-    </ScrollViewer>
+    <Grid>
+        <Image Source="/Assets/Images/Home.jpg"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+    </Grid>
 </UserControl>

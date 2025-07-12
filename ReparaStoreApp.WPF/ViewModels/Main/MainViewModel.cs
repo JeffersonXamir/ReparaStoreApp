@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
+using ReparaStoreApp.WPF.ViewModels.Configuracion;
 using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
@@ -29,6 +30,18 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             }
         }
 
+        private string _searchQuery;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                if (Set(ref _searchQuery, value))
+                    UpdateFilteredItems(_searchQuery);
+            }
+        }
+
+        private List<NavigationViewItem> _menuItemsMaster = new();
         public ObservableCollection<NavigationViewItem> MenuItems { get; } = new();
         public ObservableCollection<NavigationViewItem> FooterMenuItems { get; } = new();
 
@@ -66,13 +79,18 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             };
 
             settingsItem.MenuItems.Add(CreateNavigationItem("Usuarios", SymbolRegular.Person24, typeof(UserViewModel)));
-            settingsItem.MenuItems.Add(CreateNavigationItem("Ajustes", SymbolRegular.Settings24, typeof(HomeViewModel)));
+            settingsItem.MenuItems.Add(CreateNavigationItem("Ajustes", SymbolRegular.Settings24, typeof(SettingsViewModel)));
 
 
             MenuItems.Add(settingsItem);
 
             // Menú footer
             FooterMenuItems.Add(CreateNavigationItem("Cerrar Sesión", SymbolRegular.SignOut24, typeof(LogOutViewModel)));
+
+            foreach (var item in MenuItems)
+            {
+                _menuItemsMaster.Add(CloneNavigationItem(item));
+            }
         }
 
         private NavigationViewItem CreateNavigationItem(string title, SymbolRegular icon, Type viewModelType)
@@ -171,5 +189,73 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         public bool IsRefreshEnabled => _buttonStates[ToolbarButtonsAction.Refresh];
         public bool IsPrintEnabled => _buttonStates[ToolbarButtonsAction.Print];
         public bool IsUndoEnabled => _buttonStates[ToolbarButtonsAction.Undo];
+
+
+        private NavigationViewItem CloneNavigationItem(NavigationViewItem item)
+        {
+            var clone = new NavigationViewItem
+            {
+                Content = item.Content,
+                Icon = item.Icon,
+                Tag = item.Tag,
+                TargetPageType = typeof(Page)
+            };
+
+            foreach (var subItem in item.MenuItems)
+            {
+                if (subItem is NavigationViewItem navSubItem)
+                {
+                    clone.MenuItems.Add(CloneNavigationItem(navSubItem));
+                }
+            }
+
+            return clone;
+        }
+
+
+        private void UpdateFilteredItems(string query)
+        {
+            MenuItems.Clear();
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                foreach (var item in _menuItemsMaster)
+                    MenuItems.Add(CloneNavigationItem(item));
+
+                return;
+            }
+
+            var lowerQuery = query.ToLower();
+
+            foreach (var item in _menuItemsMaster)
+            {
+                bool isParentMatch = item.Content.ToString().ToLower().Contains(lowerQuery);
+                var matchedChildren = new List<NavigationViewItem>();
+
+                foreach (var child in item.MenuItems.OfType<NavigationViewItem>())
+                {
+                    if (child.Content.ToString().ToLower().Contains(lowerQuery))
+                    {
+                        matchedChildren.Add(CloneNavigationItem(child));
+                    }
+                }
+
+                if (matchedChildren.Any())
+                {
+                    var filteredParent = CloneNavigationItem(item);
+                    filteredParent.MenuItems.Clear();
+                    foreach (var child in matchedChildren)
+                        filteredParent.MenuItems.Add(child);
+
+                    MenuItems.Add(filteredParent);
+                }
+                else if (isParentMatch)
+                {
+                    MenuItems.Add(CloneNavigationItem(item));
+                }
+            }
+        }
+
+
     }
 }

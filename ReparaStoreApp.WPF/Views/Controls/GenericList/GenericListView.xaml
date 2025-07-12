@@ -5,75 +5,73 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Controls.GenericList"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="800">
+
+    <!-- Se ajusta a su contenedor -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Búsqueda -->
             <RowDefinition Height="*"/>
+            <!-- Lista -->
             <RowDefinition Height="Auto"/>
+            <!-- Paginación -->
         </Grid.RowDefinitions>
 
-        <!-- Search Box -->
-        <Grid Grid.Row="0" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Icono -->
-            <ui:SymbolIcon Symbol="Search24" 
-                  Margin="4,0"
-                  VerticalAlignment="Center"/>
-
-            <!-- TextBox -->
-            <ui:TextBox Grid.Column="1"
-               PlaceholderText="Buscar..."
-               Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+        <!-- Buscador -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="Search24" Margin="4,0" VerticalAlignment="Center" />
+            <ui:TextBox Margin="8,0,0,0"
+                        PlaceholderText="Buscar..."
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="KeyUp">
-                        <cal:ActionMessage MethodName="Search"/>
+                        <cal:ActionMessage MethodName="Search" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ui:TextBox>
-        </Grid>
+        </DockPanel>
 
-        <!-- List with Scroll -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="Items" 
+        <!-- Lista -->
+        <ui:DataGrid Grid.Row="1"
+                     x:Name="Items"
+                     ItemsSource="{Binding Items}"
                      SelectedItem="{Binding SelectedItem}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      IsEnabled="{Binding IsListEnabled}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Código" 
-                                      DisplayMemberBinding="{Binding Code}"/>
-                        <GridViewColumn Header="Nombre" 
-                                      DisplayMemberBinding="{Binding Name}" 
-                                      Width="200"/>
-                        <!-- Columnas adicionales pueden agregarse dinámicamente -->
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </ScrollViewer>
+                     IsEnabled="{Binding IsListEnabled}"
+                     AutoGenerateColumns="False"
+                     SelectionMode="Single"
+                     Margin="0"
+                     HeadersVisibility="Column"
+                     CanUserAddRows="False"
+                     CanUserDeleteRows="False">
+            <ui:DataGrid.Columns>
+                <DataGridTextColumn Header="Código" IsReadOnly="True" Binding="{Binding Code}" Width="Auto" />
+                <DataGridTextColumn Header="Nombre" IsReadOnly="True" Binding="{Binding Name}" Width="215" />
+                <!-- Puedes agregar más columnas según tu modelo -->
+            </ui:DataGrid.Columns>
+        </ui:DataGrid>
 
-        <!-- Pagination -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Anterior" 
-                   cal:Message.Attach="[Event Click] = [PreviousPage()]"
-                   IsEnabled="{Binding CanPreviousPage}"
-                   Margin="5"/>
+        <!-- Paginación -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="0,12,0,0">
+            <ui:Button Content="Anterior"
+                       Margin="4"
+                       IsEnabled="{Binding CanPreviousPage}"
+                       cal:Message.Attach="[Event Click] = [PreviousPage()]" />
 
-            <TextBlock Text="{Binding CurrentPage}" 
-                      VerticalAlignment="Center"
-                      Margin="5"/>
+            <ui:TextBlock Text="{Binding CurrentPage}"
+                          VerticalAlignment="Center"
+                          Margin="12,0"
+                          FontTypography="BodyStrong" />
 
-            <Button Content="Siguiente" 
-                    cal:Message.Attach="[Event Click] = [NextPage()]"
-                    IsEnabled="{Binding CanNextPage}"
-                    Margin="5"/>
+            <ui:Button Content="Siguiente"
+                       Margin="4"
+                       IsEnabled="{Binding CanNextPage}"
+                       cal:Message.Attach="[Event Click] = [NextPage()]" />
         </StackPanel>
     </Grid>
 </UserControl>
