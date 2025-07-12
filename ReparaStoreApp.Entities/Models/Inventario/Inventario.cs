@@ -10,8 +10,10 @@ namespace ReparaStoreApp.Entities.Models.Inventario
     {
         public int Id { get; set; }
         public int ProductoId { get; set; }
-        public Producto Producto { get; set; }
+        public ItemEntity Producto { get; set; }
         public int Cantidad { get; set; }
         public int StockMinimo { get; set; }
+        public int StockMaximo { get; set; }
+        public bool Activo { get; set; }
     }
 }
