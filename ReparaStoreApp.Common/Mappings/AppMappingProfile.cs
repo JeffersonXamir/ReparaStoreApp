@@ -45,12 +45,22 @@ namespace ReparaStoreApp.Common.Mappings
                 .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));
 
-            CreateMap<ItemEntity, ProductServiceItem>()
+            CreateMap<ItemEntity, ProductosItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Codigo))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
 
-            CreateMap<ProductServiceItem, ItemEntity>()
+            CreateMap<ProductosItem, ItemEntity>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<ItemEntity, ServiciosItem>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Codigo))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
+
+            CreateMap<ServiciosItem, ItemEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));

@@ -37,7 +37,7 @@ namespace ReparaStoreApp.Core.Services.ProductosService
             return await _ProductosRepository.GetCountAsync(searchText);
         }
 
-        public async Task SaveProductosAsync(ProductServiceItem Productos)
+        public async Task SaveProductosAsync(ProductosItem Productos)
         {
             if (Productos == null) return;
             var ProductosDb = _mapper.Map<ItemEntity>(Productos);
@@ -47,7 +47,7 @@ namespace ReparaStoreApp.Core.Services.ProductosService
             await _ProductosRepository.SaveAsync(ProductosDb);
         }
 
-        public async Task UpdateProductosAsync(ProductServiceItem Productos)
+        public async Task UpdateProductosAsync(ProductosItem Productos)
         {
             if (Productos == null) return;
             var ProductosDb = await _ProductosRepository.GetByIdAsync(Productos.Id);
@@ -64,14 +64,14 @@ namespace ReparaStoreApp.Core.Services.ProductosService
             await _ProductosRepository.SaveAsync(ProductosDb);
         }
 
-        public async Task ActivateProductosAsync(ProductServiceItem Productos)
+        public async Task ActivateProductosAsync(ProductosItem Productos)
         {
             if (Productos == null) return;
             var ProductosDb = await _ProductosRepository.GetByIdAsync(Productos.Id);
             await _ProductosRepository.Activate(ProductosDb);
         }
 
-        public async Task DeleteProductosAsync(ProductServiceItem Productos)
+        public async Task DeleteProductosAsync(ProductosItem Productos)
         {
             if (Productos == null) return;
             var ProductosDb = await _ProductosRepository.GetByIdAsync(Productos.Id);

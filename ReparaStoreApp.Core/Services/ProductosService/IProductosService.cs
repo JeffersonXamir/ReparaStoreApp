@@ -13,9 +13,9 @@ namespace ReparaStoreApp.Core.Services.ProductosService
         Task<ItemEntity> GetProductosByIdAsync(int id);
         Task<IEnumerable<ItemEntity>> SearchProductosAsync(string searchText, int page, int pageSize);
         Task<int> GetProductosCountAsync(string searchText);
-        Task SaveProductosAsync(ProductServiceItem Productos);
-        Task UpdateProductosAsync(ProductServiceItem Productos);
-        Task ActivateProductosAsync(ProductServiceItem Productos);
-        Task DeleteProductosAsync(ProductServiceItem Productos);
+        Task SaveProductosAsync(ProductosItem Productos);
+        Task UpdateProductosAsync(ProductosItem Productos);
+        Task ActivateProductosAsync(ProductosItem Productos);
+        Task DeleteProductosAsync(ProductosItem Productos);
     }
 }

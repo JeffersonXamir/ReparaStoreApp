@@ -2,39 +2,44 @@
 using Caliburn.Micro;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Common.Mappings;
 using ReparaStoreApp.Core.Services.ClientesService;
 using ReparaStoreApp.Core.Services.DispositivosService;
 using ReparaStoreApp.Core.Services.Login;
+using ReparaStoreApp.Core.Services.ProductosService;
+using ReparaStoreApp.Core.Services.ServiciosService;
 using ReparaStoreApp.Data;
 using ReparaStoreApp.Data.Repositories.ClientesRepository;
 using ReparaStoreApp.Data.Repositories.DispositivosRepository;
 using ReparaStoreApp.Data.Repositories.Login;
+using ReparaStoreApp.Data.Repositories.ProductosRepository;
+using ReparaStoreApp.Data.Repositories.ServiciosRepository;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security;
 using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
+using ReparaStoreApp.WPF.ViewModels.Configuracion;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
+using ReparaStoreApp.WPF.ViewModels.Productos;
 using ReparaStoreApp.WPF.ViewModels.Services.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Services.Dispositivos;
+using ReparaStoreApp.WPF.ViewModels.Services.Productos;
+using ReparaStoreApp.WPF.ViewModels.Services.Servicios;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
-using ReparaStoreApp.WPF.ViewModels.Configuracion;
+using ReparaStoreApp.WPF.ViewModels.Servicios;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Xml.Linq;
 using Wpf.Ui;
-using ReparaStoreApp.Data.Repositories.ServiciosRepository;
-using ReparaStoreApp.Data.Repositories.ProductosRepository;
-using ReparaStoreApp.WPF.ViewModels.Services.Productos;
-using ReparaStoreApp.WPF.ViewModels.Services.Servicios;
 
 namespace ReparaStoreApp.WPF
 {
@@ -97,27 +102,35 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
                 .Singleton<IAuthService, AuthService>()
-                .Singleton<IUserRepository, UserRepository>()
                 .Singleton<IUserService, UserService>()
-                .Singleton<IClientesRepository, ClientesRepository>()
                 .Singleton<IClientesService, ClientesService>()
-                .Singleton<IDispositivosRepository, DispositivosRepository>()
-                .Singleton<IServiciosRepository, ServiciosRepository>()
-                .Singleton<IProductosRepository, ProductosRepository>()
+                .Singleton<IServiciosService, ServiciosService>()
+                .Singleton<IProductosService, ProductosService>()
                 .Singleton<IDispositivosService, DispositivosService>();
 
-            // Nuevos servicios para el listado genérico
+            // 4. Configuración de repositorios
+            _container
+                .Singleton<IUserRepository, UserRepository>()
+                .Singleton<IClientesRepository, ClientesRepository>()
+                .Singleton<IServiciosRepository, ServiciosRepository>()
+                .Singleton<IProductosRepository, ProductosRepository>()
+                .Singleton<IDispositivosRepository, DispositivosRepository>();
+
+
+            // 5. Nuevos servicios para el listado genérico
             _container.PerRequest<IDataService<UserItem>, UserDataService>();
             _container.PerRequest<GenericListViewModel<UserItem>>(); // ¡Esta línea es crucial!
             _container.PerRequest<IDataService<ClientesItem>, ClientesDataService>();
             _container.PerRequest<GenericListViewModel<ClientesItem>>();
             _container.PerRequest<IDataService<DispositivosItem>, DispositivosDataService>();
             _container.PerRequest<GenericListViewModel<DispositivosItem>>();
-            _container.PerRequest<IDataService<ProductServiceItem>, ProductosDataService>();
-            _container.PerRequest<IDataService<ProductServiceItem>, ServiciosDataService>();
-            _container.PerRequest<GenericListViewModel<ProductServiceItem>>();
+            _container.PerRequest<IDataService<ProductosItem>, ProductosDataService>();
+            _container.PerRequest<GenericListViewModel<ProductosItem>>();
+            _container.PerRequest<IDataService<ServiciosItem>, ServiciosDataService>();
+            _container.PerRequest<GenericListViewModel<ServiciosItem>>();
 
-            // Registra tus ViewModels aquí
+
+            // 6. Registra tus ViewModels aquí
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<LoginViewModel>()
@@ -127,6 +140,8 @@ namespace ReparaStoreApp.WPF
                 .PerRequest<ClientesViewModel>()
                 .PerRequest<DispositivosViewModel>()
                 .PerRequest<SettingsViewModel>()
+                .PerRequest<ProductosViewModel>()
+                .PerRequest<ServiciosViewModel>()
                 .PerRequest<UserViewModel>();
         }
 

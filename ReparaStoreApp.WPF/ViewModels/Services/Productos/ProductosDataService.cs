@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.WPF.ViewModels.Services.Productos
 {
-    public  class ProductosDataService : IDataService<ProductServiceItem>
+    public  class ProductosDataService : IDataService<ProductosItem>
     {
         private readonly IProductosService _ProductosService;
         private readonly IMapper _mapper;
@@ -21,10 +21,10 @@ namespace ReparaStoreApp.WPF.ViewModels.Services.Productos
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductServiceItem>> SearchAsync(string searchText, int page, int pageSize)
+        public async Task<IEnumerable<ProductosItem>> SearchAsync(string searchText, int page, int pageSize)
         {
             var Productoss = await _ProductosService.SearchProductosAsync(searchText, page, pageSize);
-            return _mapper.Map<IEnumerable<ProductServiceItem>>(Productoss);
+            return _mapper.Map<IEnumerable<ProductosItem>>(Productoss);
         }
 
         public async Task<int> GetTotalCountAsync(string searchText)
@@ -32,10 +32,10 @@ namespace ReparaStoreApp.WPF.ViewModels.Services.Productos
             return await _ProductosService.GetProductosCountAsync(searchText);
         }
 
-        public async Task<ProductServiceItem> GetByIdAsync(int id)
+        public async Task<ProductosItem> GetByIdAsync(int id)
         {
             var Productos = await _ProductosService.GetProductosByIdAsync(id);
-            return _mapper.Map<ProductServiceItem>(Productos);
+            return _mapper.Map<ProductosItem>(Productos);
         }
     }
 }

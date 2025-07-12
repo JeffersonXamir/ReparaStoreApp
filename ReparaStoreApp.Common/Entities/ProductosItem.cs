@@ -8,13 +8,19 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.Common.Entities
 {
-    public  class ProductServiceItem : Item
+    public  class ProductosItem : Item
     {
         public string Descripcion { get; set; } = "";
         public string Nota { get; set; } = "";
         public decimal Precio { get; set; }
         public TipoItem Tipo { get; set; } // Producto o Servicio
-        public bool Activo { get; set; } = true;
+        
+        private bool _activo;
+        public bool Activo
+        {
+            get { return _activo; }
+            set { _activo = value; NotifyOfPropertyChange(() => Activo); }
+        }
         public bool TieneIVA { get; set; } = true;
         public DateTime FechaCreacion { get; set; }
         public int UsuarioCreadorId { get; set; }
