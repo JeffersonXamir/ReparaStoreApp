@@ -31,6 +31,10 @@ using System.IO;
 using System.Windows;
 using System.Xml.Linq;
 using Wpf.Ui;
+using ReparaStoreApp.Data.Repositories.ServiciosRepository;
+using ReparaStoreApp.Data.Repositories.ProductosRepository;
+using ReparaStoreApp.WPF.ViewModels.Services.Productos;
+using ReparaStoreApp.WPF.ViewModels.Services.Servicios;
 
 namespace ReparaStoreApp.WPF
 {
@@ -98,6 +102,8 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IClientesRepository, ClientesRepository>()
                 .Singleton<IClientesService, ClientesService>()
                 .Singleton<IDispositivosRepository, DispositivosRepository>()
+                .Singleton<IServiciosRepository, ServiciosRepository>()
+                .Singleton<IProductosRepository, ProductosRepository>()
                 .Singleton<IDispositivosService, DispositivosService>();
 
             // Nuevos servicios para el listado genérico
@@ -107,6 +113,9 @@ namespace ReparaStoreApp.WPF
             _container.PerRequest<GenericListViewModel<ClientesItem>>();
             _container.PerRequest<IDataService<DispositivosItem>, DispositivosDataService>();
             _container.PerRequest<GenericListViewModel<DispositivosItem>>();
+            _container.PerRequest<IDataService<ProductServiceItem>, ProductosDataService>();
+            _container.PerRequest<IDataService<ProductServiceItem>, ServiciosDataService>();
+            _container.PerRequest<GenericListViewModel<ProductServiceItem>>();
 
             // Registra tus ViewModels aquí
             _container

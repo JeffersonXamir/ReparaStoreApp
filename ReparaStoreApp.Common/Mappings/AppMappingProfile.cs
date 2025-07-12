@@ -2,6 +2,7 @@
 using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Entities.Models.Cliente;
 using ReparaStoreApp.Entities.Models.Dispositivo;
+using ReparaStoreApp.Entities.Models.Inventario;
 using ReparaStoreApp.Entities.Models.Security;
 
 namespace ReparaStoreApp.Common.Mappings
@@ -40,6 +41,16 @@ namespace ReparaStoreApp.Common.Mappings
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
 
             CreateMap<DispositivosItem, Dispositivos>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<ItemEntity, ProductServiceItem>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Codigo))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Nombre));
+
+            CreateMap<ProductServiceItem, ItemEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Code))
                 .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Name));
