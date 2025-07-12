@@ -6,6 +6,7 @@ using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Productos;
+using ReparaStoreApp.WPF.ViewModels.Reparaciones;
 using ReparaStoreApp.WPF.ViewModels.Servicios;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.Collections.ObjectModel;
@@ -73,6 +74,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             MenuItems.Add(CreateNavigationItem("Dispositivos", SymbolRegular.Phone24, typeof(DispositivosViewModel)));
             MenuItems.Add(CreateNavigationItem("Productos", SymbolRegular.Box24, typeof(ProductosViewModel)));
             MenuItems.Add(CreateNavigationItem("Servicios", SymbolRegular.Wrench24, typeof(ServiciosViewModel)));
+            MenuItems.Add(CreateNavigationItem("Reparaciones", SymbolRegular.Toolbox24, typeof(ReparacionesViewModel)));
 
             // Menú de configuración (con subitems)
             var settingsItem = new NavigationViewItem

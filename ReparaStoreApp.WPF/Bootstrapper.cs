@@ -28,6 +28,7 @@ using ReparaStoreApp.WPF.ViewModels.Home;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
 using ReparaStoreApp.WPF.ViewModels.Productos;
+using ReparaStoreApp.WPF.ViewModels.Reparaciones;
 using ReparaStoreApp.WPF.ViewModels.Services.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Services.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Services.Productos;
@@ -142,6 +143,7 @@ namespace ReparaStoreApp.WPF
                 .PerRequest<SettingsViewModel>()
                 .PerRequest<ProductosViewModel>()
                 .PerRequest<ServiciosViewModel>()
+                .PerRequest<ReparacionesViewModel>()
                 .PerRequest<UserViewModel>();
         }
 

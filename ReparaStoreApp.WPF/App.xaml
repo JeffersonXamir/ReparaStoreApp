@@ -18,6 +18,11 @@
             <local1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <local1:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
+            <Style x:Key="RightAlignedText" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Margin" Value="0,0,5,0"/>
+            </Style>
+            
             <Style x:Key="ToolbarButtonStyle" TargetType="ui:Button">
                 <Setter Property="Margin" Value="5,0"/>
                 <Setter Property="Padding" Value="10,4"/>
