@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>d566f169-b0be-4e1d-b588-ab8ad26ac793</UserSecretsId>
-    <PackageIcon>ReparaStoreApp.ico</PackageIcon>
+    <PackageIcon>ReparaStoreApp_Blanco.ico</PackageIcon>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
@@ -26,6 +26,10 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\ReparaStoreApp_Blanco.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +69,10 @@
 
   <ItemGroup>
     <None Update="Assets\Icons\ReparaStoreApp.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Assets\Icons\ReparaStoreApp_Blanco.ico">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

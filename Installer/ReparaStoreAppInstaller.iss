@@ -23,10 +23,10 @@ Source: "..\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreAppIcon.ico"; DestDir: "{
 
 [Icons]
 ; Icono en el menú de inicio
-Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppIcon.ico"
+Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppBlanco.ico"
 
 ; Icono en el escritorio
-Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppIcon.ico"
+Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppBlanco.ico"
 
 ; Icono para desinstalar
 Name: "{group}\Desinstalar ReparaStore"; Filename: "{uninstallexe}"; IconFilename: "{app}\ReparaStoreAppIcon.ico"

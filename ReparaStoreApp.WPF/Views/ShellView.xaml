@@ -11,7 +11,7 @@
         WindowState="Maximized"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize"
-        Icon="/Assets/Icons/ReparaStoreAppIcon.ico">
+        Icon="/Assets/Icons/ReparaStoreApp_Blanco.ico">
     <Grid>
         <!-- Contenido activo (login o dashboard) -->
         <ContentControl cal:View.Model="{Binding ActiveItem}" />
