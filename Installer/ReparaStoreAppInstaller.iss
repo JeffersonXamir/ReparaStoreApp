@@ -14,22 +14,22 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 ; Agregado para evitar advertencias
 WizardStyle=modern
-SetupIconFile=..\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreAppIcon.ico
+SetupIconFile=..\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreApp_Blanco.ico
 
 [Files]
 Source: "..\ReparaStoreApp.WPF\bin\Release\net8.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "..\ReparaStoreApp.WPF\appsettings.json"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
-Source: "..\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreAppIcon.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReparaStoreApp.WPF\Assets\Icons\ReparaStoreApp_Blanco.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 ; Icono en el menú de inicio
-Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppBlanco.ico"
+Name: "{group}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreApp_Blanco.ico"
 
 ; Icono en el escritorio
-Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreAppBlanco.ico"
+Name: "{commondesktop}\ReparaStore"; Filename: "{app}\ReparaStoreApp.WPF.exe"; IconFilename: "{app}\ReparaStoreApp_Blanco.ico"
 
 ; Icono para desinstalar
-Name: "{group}\Desinstalar ReparaStore"; Filename: "{uninstallexe}"; IconFilename: "{app}\ReparaStoreAppIcon.ico"
+Name: "{group}\Desinstalar ReparaStore"; Filename: "{uninstallexe}"; IconFilename: "{app}\ReparaStoreApp_Blanco.ico"
 
 [Run]
 Filename: "{app}\ReparaStoreApp.WPF.exe"; Parameters: "--migrate"; Description: "Configurar base de datos"; Flags: postinstall nowait skipifsilent runascurrentuser
