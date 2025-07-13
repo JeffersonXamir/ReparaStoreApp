@@ -120,7 +120,7 @@
                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
 
                             <TextBlock Text="Descripción general:" Margin="5,5,5,0"/>
-                            <ui:TextBox Text="{Binding CurrentRepair.Descripcion}" 
+                            <ui:TextBox Text="{Binding CurrentRepair.Detalle}" 
                                          IsEnabled="{Binding IsInEditOrCreationMode}"
                                          Margin="5" 
                                          AcceptsReturn="True"
@@ -287,52 +287,82 @@
 
                 <!-- Fila 1: DataGrid responsive -->
                 <DataGrid Grid.Row="1" IsEnabled="{Binding IsInEditOrCreationMode}"
-                          ItemsSource="{Binding CurrentRepair.Detalles}"
+                          ItemsSource="{Binding CurrentRepair.Detalles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedDetail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
-                          IsReadOnly="True"
                           SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          SelectedItem="{Binding SelectedDetail}"
+                          SelectionUnit="FullRow"   
+                          Validation.ErrorTemplate="{x:Null}"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
                           BorderThickness="1"
-                          BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+                          BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                          cal:Message.Attach="[Event CellEditEnding] = [Action CalculateTotals()]"
+                          PreviewMouseLeftButtonDown="DataGrid_PreviewMouseLeftButtonDown"
+                          BeginningEdit="DataGrid_BeginningEdit" >
+
+
+                    <DataGrid.Resources>
+                        <Style x:Key="EditableCellStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}"/>
+                            <Setter Property="TextAlignment" Value="Right"/>
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
+                        <!-- Columna Item (solo lectura) -->
                         <DataGridTextColumn Header="Item" 
-                               Binding="{Binding Item.Name}" 
-                               Width="*"
-                               MinWidth="150"/>
+                           Binding="{Binding Item.Nombre}" 
+                           Width="*"
+                           MinWidth="150"
+                           IsReadOnly="True"/>
+
+                        <!-- Columna Cantidad (editable) -->
                         <DataGridTextColumn Header="Cantidad" 
-                               Binding="{Binding Cantidad}" 
-                               Width="0.8*"
-                               MinWidth="80"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding Cantidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                           Width="0.8*"
+                           MinWidth="80"
+                           IsReadOnly="False"
+                           ElementStyle="{StaticResource RightAlignedText}"
+                           EditingElementStyle="{StaticResource EditableCellStyle}"/>
+
+                        <!-- Columnas restantes (solo lectura) -->
                         <DataGridTextColumn Header="P. Unitario" 
-                               Binding="{Binding PrecioUnitario, StringFormat=C}" 
-                               Width="1.2*"
-                               MinWidth="100"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding PrecioUnitario, StringFormat=C}" 
+                           Width="1.2*"
+                           MinWidth="100"
+                           IsReadOnly="True"
+                           ElementStyle="{StaticResource RightAlignedText}"/>
+
                         <DataGridTextColumn Header="IVA" 
-                               Binding="{Binding TasaIVA, StringFormat=p2}" 
-                               Width="0.8*"
-                               MinWidth="80"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding TasaIVA, StringFormat=N2}" 
+                           Width="0.8*"
+                           MinWidth="80"
+                           IsReadOnly="True" TextOptions.TextRenderingMode="Auto"
+                           ElementStyle="{StaticResource RightAlignedText}"/>
+
                         <DataGridTextColumn Header="Total IVA" 
-                               Binding="{Binding TotalIVA, StringFormat=C}" 
-                               Width="1.2*"
-                               MinWidth="100"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding TotalIVA, StringFormat=C}" 
+                           Width="1.2*"
+                           MinWidth="100"
+                           IsReadOnly="True"
+                           ElementStyle="{StaticResource RightAlignedText}"/>
+
                         <DataGridTextColumn Header="Subtotal" 
-                               Binding="{Binding SubTotal, StringFormat=C}" 
-                               Width="1.2*"
-                               MinWidth="100"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding SubTotal, StringFormat=C}" 
+                           Width="1.2*"
+                           MinWidth="100"
+                           IsReadOnly="True"
+                           ElementStyle="{StaticResource RightAlignedText}"/>
+
                         <DataGridTextColumn Header="Total" 
-                               Binding="{Binding Total, StringFormat=C}" 
-                               Width="1.2*"
-                               MinWidth="100"
-                               ElementStyle="{StaticResource RightAlignedText}"/>
+                           Binding="{Binding Total, StringFormat=C}" 
+                           Width="1.2*"
+                           MinWidth="100"
+                           IsReadOnly="True"
+                           ElementStyle="{StaticResource RightAlignedText}"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -350,30 +380,30 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,20,0" VerticalAlignment="Center">
-                            <TextBlock Text="Estimado:" 
+                            <TextBlock Text="SubTotal:" 
                           Margin="0,0,5,0"
                           FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding CurrentRepair.CostoEstimado, StringFormat=C}"
+                            <TextBlock Text="{Binding SubTotalDocument, StringFormat=C}"
                           FontWeight="Bold"
                           MinWidth="100"
                           TextAlignment="Right"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,20,0" VerticalAlignment="Center">
-                            <TextBlock Text="Final:" 
+                            <TextBlock Text="IVA:" 
                           Margin="0,0,5,0"
                           FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding CurrentRepair.CostoFinal, StringFormat=C}"
+                            <TextBlock Text="{Binding TotalIVADocument, StringFormat=C}"
                           FontWeight="Bold"
                           MinWidth="100"
                           TextAlignment="Right"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Diferencia:" 
+                            <TextBlock Text="Total:" 
                           Margin="0,0,5,0"
                           FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding CostDifference, StringFormat=C}"
+                            <TextBlock Text="{Binding TotalDocument, StringFormat=C}"
                           FontWeight="Bold"
                           MinWidth="100"
                           TextAlignment="Right"

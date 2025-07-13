@@ -5,6 +5,7 @@ using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Core.Services.ClientesService;
 using ReparaStoreApp.Core.Services.DispositivosService;
 using ReparaStoreApp.Core.Services.Login;
+using ReparaStoreApp.Core.Services.ReparacionesService;
 using ReparaStoreApp.Entities.Models.Cliente;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Entities.Models.Store;
@@ -29,6 +30,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         private readonly IEventAggregator _eventAggregator;
         private readonly IClientesService _ClientesService;
         private readonly IDispositivosService _DispositivosService;
+        private readonly IReparacionesService _ReparacionesService;
         private readonly IUserService _UserService;
         private readonly IDataService<ClientesItem> _ClientesDataService;
         private readonly GenericSelectionDialogViewModel<ProductosItem> _productSelectionDialog;
@@ -118,12 +120,42 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             }
         }
 
+        private ReparacionDetalleItem _selectedDetail;
+        public ReparacionDetalleItem SelectedDetail
+        {
+            get { return _selectedDetail; }
+            set { _selectedDetail = value; NotifyOfPropertyChange(() => SelectedDetail); }
+        }
+
+
+        private decimal _totalDocument;
+        public decimal TotalDocument
+        {
+            get { return _totalDocument; }
+            set { _totalDocument = value; NotifyOfPropertyChange(() => TotalDocument); }
+        }
+
+        private decimal _totalIVADocument;
+        public decimal TotalIVADocument
+        {
+            get { return _totalIVADocument; }
+            set { _totalIVADocument = value; NotifyOfPropertyChange(() => TotalIVADocument); }
+        }
+
+        private decimal _subTotalDocument;
+        public decimal SubTotalDocument
+        {
+            get { return _subTotalDocument; }
+            set { _subTotalDocument = value; NotifyOfPropertyChange(() => SubTotalDocument); }
+        }
+
         public ReparacionesViewModel(
                             IWindowManager windowManager,
                             IEventAggregator eventAggregator,
                             IDataService<ClientesItem> ClientesDataService,
                             IClientesService ClientesService,
                             IDispositivosService DispositivosService,
+                            IReparacionesService ReparacionesService,
                             IUserService UserService,
                             GenericSelectionDialogViewModel<ProductosItem> ProductSelectionDialog,
                             IMapper mapper) : base(eventAggregator)
@@ -133,12 +165,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             _ClientesDataService = ClientesDataService;
             _ClientesService = ClientesService;
             _DispositivosService = DispositivosService;
+            _ReparacionesService = ReparacionesService;
             _UserService = UserService;
             _productSelectionDialog = ProductSelectionDialog;
             _mapper = mapper;
 
             AvailableClients = new BindableCollection<ClientesItem>();
-
+            SelectedDetail = new ReparacionDetalleItem();
 
         }
 
@@ -179,6 +212,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+                if ((DeviceSelect?.ClienteId ?? 0) == 0) return;
+
                 var item = await _ClientesService.GetClientesByIdAsync(DeviceSelect.ClienteId);
                 if (item == null)
                     throw new Exception("Error");
@@ -186,6 +221,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 var itemMap = _mapper.Map<ClientesItem>(item);
                 if (itemMap != null)
                     await CargarClienteDispositivo(itemMap);
+
+                CurrentRepair.DispositivoId = DeviceSelect.Id;
             }
             catch (Exception ex)
             {
@@ -198,7 +235,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
-                AvailableClients.Add(cliente);
+                AvailableClients?.Clear();
+                AvailableClients?.Add(cliente);
                 ClientSelect = cliente;
             }
             catch (Exception ex)
@@ -225,6 +263,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+                if (RepairStateSelect == null) return;
+
                 CurrentRepair.Estado = RepairStateSelect.Estado;
             }
             catch (Exception ex)
@@ -287,6 +327,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 CurrentRepair.UsuarioCreadorId = userId;
                 //CurrentRepair.Estado = EstadoReparacion.Aprobado;
 
+                CurrentRepair.Detalles?.Clear();
+
                 RepairStateSelect = RepairStates?.FirstOrDefault(x => x.Estado == EstadoReparacion.Pendiente);
 
                 var paramIVA = await _UserService.GetParamByCode("SYS-IVA");
@@ -340,8 +382,6 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             {
                 IsBusy = true;
 
-
-
                 var validateForm = await ValidateForm();
                 if (!validateForm.Success)
                 {
@@ -352,14 +392,14 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 if (CreationMode)
                 {
                     // Lógica para nuevo Registro
-                    //await _ClientesService.SaveClientesAsync(EditCopy);
+                    await _ReparacionesService.CreateAsync(CurrentRepair);
 
                     await ShowNotification("Registro creado exitosamente");
                 }
                 else if (EditMode)
                 {
                     // Lógica para edición
-                    //await _ClientesService.UpdateClientesAsync(EditCopy);
+                    await _ReparacionesService.UpdateAsync(CurrentRepair);
                     //CurrentClientes = EditCopy; // Actualizar el original
                     await ShowNotificationMessage("Registro actualizado exitosamente");
                     await ShowNotification("Registro actualizado exitosamente");
@@ -433,6 +473,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 EditMode = false;
                 //_ClientesListViewModel.IsListEnabled = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
+                await ClearForm();
                 await base.Undo();
             }
 
@@ -498,15 +539,36 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 if (selectedProduct != null)
                 {
                     // Lógica para agregar el producto
-                    if (SelectedProducts.Any(p => p.Id == selectedProduct.Id))
+                    if (CurrentRepair.Detalles.Any(p => p.ItemId == selectedProduct.Id))
                     {
                         await ShowNotificationMessage(
                             "Este producto ya ha sido agregado");
                         return;
                     }
 
-                    SelectedProducts.Add(selectedProduct);
-                    CalculateTotals();
+                    var detalle = new ReparacionDetalleItem();
+                    detalle.Id = 0;
+                    detalle.ReparacionId = CurrentRepair.Id;
+                    detalle.ItemId = selectedProduct.Id;
+                    detalle.Item = new Entities.Models.Inventario.ItemEntity();
+                    detalle.Item.Id = selectedProduct.Id;
+                    detalle.Item.Codigo = selectedProduct.Code;
+                    detalle.Item.Nombre = selectedProduct.Name;
+                    detalle.Cantidad = 1;
+                    detalle.Activo = true;
+                    detalle.PrecioUnitario = selectedProduct.Precio;
+                    detalle.TasaIVA = TasaIVA;
+                    detalle.TotalIVA = ((detalle.Cantidad * detalle.PrecioUnitario) * detalle.TasaIVA / 100);
+                    detalle.SubTotal = (detalle.Cantidad * detalle.PrecioUnitario);
+                    detalle.Total = detalle.SubTotal + detalle.TotalIVA;
+                    detalle.FechaCreacion = DateTime.Now;
+                    detalle.UsuarioCreadorId = CurrentRepair.UsuarioCreadorId;
+
+                    CurrentRepair.Detalles.Add(detalle);
+                    NotifyOfPropertyChange(() => CurrentRepair.Detalles);
+                    NotifyOfPropertyChange(() => CurrentRepair);
+                    //SelectedProducts.Add(selectedProduct);
+                    await CalculateTotals();
                 }
             }
             catch (Exception ex)
@@ -520,18 +582,17 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
-                //if (prod == null) return;
+                if (SelectedDetail == null) return;
 
-                //try
-                //{
-                //    SelectedProducts.Remove(product);
-                //    CalculateTotals();
-                //}
-                //catch (Exception ex)
-                //{
-                //    await _windowManager.ShowMessageBox("Error",
-                //        $"No se pudo eliminar el producto: {ex.Message}");
-                //}
+                try
+                {
+                    CurrentRepair.Detalles?.Remove(SelectedDetail);
+                    await CalculateTotals();
+                }
+                catch (Exception ex)
+                {
+                    await ShowNotificationMessage($"No se pudo eliminar el producto: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
@@ -539,17 +600,41 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             }
         }
 
-        // Método para calcular totales (ejemplo)
-        private void CalculateTotals()
+        // Método para calcular totales
+        public async Task CalculateTotals()
         {
-            // Implementa tu lógica de cálculo aquí
-            // Ejemplo:
-            //CurrentRepair.SubTotal = SelectedProducts.Sum(p => p.Price);
-            //CurrentRepair.Tax = CurrentRepair.SubTotal * (TasaIVA / 100m);
-            //CurrentRepair.Total = CurrentRepair.SubTotal + CurrentRepair.Tax;
+            var subtotal = CurrentRepair.Detalles.Sum(p => p.SubTotal);
+            var totalIVA = CurrentRepair.Detalles.Sum(P => P.TotalIVA);
+            var total = CurrentRepair.Detalles.Sum(P => P.Total);
+            CurrentRepair.CostoEstimado = total;
+
+            SubTotalDocument = subtotal;
+            TotalIVADocument = totalIVA;
+            TotalDocument = total;
 
             NotifyOfPropertyChange(() => CurrentRepair);
+            await Task.CompletedTask;
         }
+
+        public async Task ClearForm()
+        {
+            try
+            {
+                CurrentRepair?.Detalles?.Clear();
+                CurrentRepair = new ReparacionItem();
+
+                TechnicianSelect = null;
+                ClientSelect = null;
+                DeviceSelect = null;
+                RepairStateSelect = null;
+            }
+            catch (Exception ex)
+            {
+                await ShowNotificationMessage($"No se pudo limpiar el formulario: {ex.Message}");
+            }
+
+        }
+
         public override async Task<ValidateForm> ValidateForm()
         {
             ValidateForm validateForm = new ValidateForm();
@@ -560,6 +645,50 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 validateForm.Success = true;
                 validateForm.ErrorMessage = string.Empty;
 
+                if (CurrentRepair.DispositivoId == 0)
+                {
+                    validateForm.Success = false;
+                    validateForm.ErrorMessage = "Debe seleccionar un dispositivo.";
+                    return validateForm;
+                }
+
+                if ((CurrentRepair.TecnicoId ?? 0) == 0)
+                {
+                    validateForm.Success = false;
+                    validateForm.ErrorMessage = "Debe seleccionar un técnico.";
+                    return validateForm;
+                }
+
+                switch (CurrentRepair.Estado)
+                {
+                    case EstadoReparacion.Pendiente:
+
+                        if (CurrentRepair.Detalle?.Length == 0 || string.IsNullOrEmpty(CurrentRepair.Detalle))
+                        {
+                            validateForm.Success = false;
+                            validateForm.ErrorMessage = "Debe ingresar una descripción.";
+                            return validateForm;
+                        }
+
+                        if (CurrentRepair.NotasIngreso?.Length == 0 || string.IsNullOrEmpty(CurrentRepair.NotasIngreso))
+                        {
+                            validateForm.Success = false;
+                            validateForm.ErrorMessage = "Debe ingresar una nota de ingreso o problema del dispositivo.";
+                            return validateForm;
+                        }
+
+                        break;
+                    case EstadoReparacion.Aprobado:
+                        break;
+                    case EstadoReparacion.EnProceso:
+                        break;
+                    case EstadoReparacion.Completado:
+                        break;
+                    case EstadoReparacion.Rechazado:
+                        break;
+                    default:
+                        break;
+                }
                 //if (string.IsNullOrEmpty(EditCopy.Code))
                 //{
                 //    validateForm.Success = false;

@@ -72,6 +72,7 @@
                         <DataTemplate>
                             <CheckBox Content="{Binding Name}"
                                       IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsActive, Mode=TwoWay}"
                                       Margin="5,5"
                                       Padding="5"
                                       cal:Message.Attach="[Event Checked] = [HandleSelectionChanged($dataContext)];

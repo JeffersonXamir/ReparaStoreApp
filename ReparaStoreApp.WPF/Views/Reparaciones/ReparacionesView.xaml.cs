@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReparaStoreApp.WPF.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,28 @@ namespace ReparaStoreApp.WPF.Views.Reparaciones
                 // Aplica nuevas alturas relativas
                 grid.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
                 grid.RowDefinitions[2].Height = new GridLength(1, GridUnitType.Star);
+            }
+        }
+
+        private void DataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var dataGrid = (DataGrid)sender;
+            var hitTest = VisualTreeHelper.HitTest(dataGrid, e.GetPosition(dataGrid));
+            var cell = hitTest.VisualHit.GetParentOfType<DataGridCell>();
+
+            if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
+            {
+                dataGrid.CurrentCell = new DataGridCellInfo(cell);
+                dataGrid.BeginEdit();
+                e.Handled = true;
+            }
+        }
+
+        private void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            if (e.Column.IsReadOnly)
+            {
+                e.Cancel = true;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using ReparaStoreApp.Entities.Models.Dispositivo;
+﻿using Caliburn.Micro;
+using ReparaStoreApp.Entities.Models.Dispositivo;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Entities.Models.Store;
 using ReparaStoreApp.Entities.Models.Ventas;
@@ -41,7 +42,17 @@ namespace ReparaStoreApp.Common.Entities
         public int? CajeroId { get; set; }
         public User? Cajero { get; set; }
 
-        public List<ReparacionDetalleItem> Detalles { get; set; } = new();
+        //public BindableCollection<ReparacionDetalleItem> Detalles { get; set; } = new();
+        private BindableCollection<ReparacionDetalleItem> _detalles = new BindableCollection<ReparacionDetalleItem>();
+        public BindableCollection<ReparacionDetalleItem> Detalles
+        {
+            get => _detalles;
+            set
+            {
+                _detalles = value;
+                NotifyOfPropertyChange(() => Detalles);
+            }
+        }
         public int? FacturaId { get; set; }
         public Factura Factura { get; set; }
 
