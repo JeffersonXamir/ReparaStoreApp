@@ -17,12 +17,12 @@
 
         <!-- Cabecera de la reparación -->
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-            <ui:Card Margin="10" Padding="15">
+            <ui:Card Margin="10 10 10 5" Padding="15">
                 <StackPanel>
                     <TextBlock Text="Información de la Reparación" 
                                FontSize="18" 
                                FontWeight="Bold"
-                               Margin="0,0,0,15"
+                               Margin="0,0,0,5"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
                     <!-- Sección Información Básica -->
@@ -53,48 +53,59 @@
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Número:" Margin="5" VerticalAlignment="Center"/>
                                 <ui:TextBox Grid.Row="0" Grid.Column="1" 
                                              Text="{Binding CurrentRepair.Numero}" 
-                                             IsEnabled="{Binding IsInEditMode}"
+                                             IsEnabled="False"
                                              Margin="5"/>
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Fecha:" Margin="5" VerticalAlignment="Center"/>
                                 <DatePicker Grid.Row="1" Grid.Column="1" 
                                                SelectedDate="{Binding CurrentRepair.Fecha}"
-                                               IsEnabled="{Binding IsInEditMode}"
+                                               IsEnabled="{Binding IsInEditOrCreationMode}"
                                                Margin="5"/>
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Estado:" Margin="5" VerticalAlignment="Center"/>
                                 <ComboBox Grid.Row="2" Grid.Column="1"
                                           ItemsSource="{Binding RepairStates}"
-                                          SelectedValue="{Binding CurrentRepair.Estado}"
-                                          IsEnabled="{Binding CanChangeStatus}"
+                                          SelectedItem="{Binding RepairStateSelect}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="Id"
+                                          IsEnabled="{Binding IsInEditOrCreationMode}"
                                           Margin="5"/>
 
                                 <!-- Columna 2 -->
                                 <TextBlock Grid.Row="0" Grid.Column="2" Text="Dispositivo:" Margin="5" VerticalAlignment="Center"/>
                                 <ComboBox Grid.Row="0" Grid.Column="3"
                                           ItemsSource="{Binding AvailableDevices}"
-                                          SelectedValue="{Binding CurrentRepair.DispositivoId}"
+                                          SelectedItem="{Binding DeviceSelect}"
                                           DisplayMemberPath="Name"
                                           SelectedValuePath="Id"
-                                          IsEnabled="{Binding IsInEditMode}"
+                                          IsEnabled="{Binding IsInEditOrCreationMode}"
                                           Margin="5"/>
 
-                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Técnico:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="Cliente:" Margin="5" VerticalAlignment="Center"/>
                                 <ComboBox Grid.Row="1" Grid.Column="3"
+                                          ItemsSource="{Binding AvailableClients}"
+                                          SelectedItem="{Binding ClientSelect}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="Id"
+                                          IsEnabled="{Binding IsInEditOrCreationMode}"
+                                          Margin="5"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Técnico:" Margin="5" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="2" Grid.Column="3"
                                           ItemsSource="{Binding AvailableTechnicians}"
                                           SelectedValue="{Binding CurrentRepair.TecnicoId}"
                                           DisplayMemberPath="Name"
                                           SelectedValuePath="Id"
-                                          IsEnabled="{Binding CanAssignTechnician}"
+                                          IsEnabled="{Binding IsInEditOrCreationMode}"
                                           Margin="5"/>
 
-                                <TextBlock Grid.Row="2" Grid.Column="2" Text="Costo Estimado:" Margin="5" VerticalAlignment="Center"/>
+                                <!--<TextBlock Grid.Row="2" Grid.Column="2" Text="Costo Estimado:" Margin="5" VerticalAlignment="Center"/>
                                 <ui:NumberBox Grid.Row="2" Grid.Column="3"
                                               Value="{Binding CurrentRepair.CostoEstimado, StringFormat=N2}"
-                                              IsEnabled="{Binding CanEditEstimatedCost}"
+                                              IsEnabled="False"
                                               Margin="5"
                                               Minimum="0"
-                                              SpinButtonPlacementMode="Inline"/>
+                                              SpinButtonPlacementMode="Inline"/>-->
                             </Grid>
                         </StackPanel>
                     </ui:Card>
@@ -110,7 +121,7 @@
 
                             <TextBlock Text="Descripción general:" Margin="5,5,5,0"/>
                             <ui:TextBox Text="{Binding CurrentRepair.Descripcion}" 
-                                         IsEnabled="{Binding IsInEditMode}"
+                                         IsEnabled="{Binding IsInEditOrCreationMode}"
                                          Margin="5" 
                                          AcceptsReturn="True"
                                          TextWrapping="Wrap"
@@ -118,7 +129,7 @@
 
                             <TextBlock Text="Notas de ingreso (problema):" Margin="5,10,5,0"/>
                             <ui:TextBox Text="{Binding CurrentRepair.NotasIngreso}" 
-                                         IsEnabled="{Binding CanEditProblemNotes}"
+                                         IsEnabled="{Binding IsInEditOrCreationMode}"
                                          Margin="5" 
                                          AcceptsReturn="True"
                                          TextWrapping="Wrap"
@@ -127,17 +138,23 @@
 
                             <TextBlock Text="Notas de reparación (solución):" Margin="5,10,5,0"/>
                             <ui:TextBox Text="{Binding CurrentRepair.NotasReparado}" 
-                                         IsEnabled="{Binding CanEditSolutionNotes}"
                                          Margin="5" 
                                          AcceptsReturn="True"
                                          TextWrapping="Wrap"
                                          MinHeight="80"
-                                         VerticalScrollBarVisibility="Auto"/>
+                                         VerticalScrollBarVisibility="Auto">
+                                <ui:TextBox.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource MultiBooleanAndConverter}">
+                                        <Binding Path="IsInEditOrCreationMode" />
+                                        <Binding Path="EditMode" />
+                                    </MultiBinding>
+                                </ui:TextBox.IsEnabled>
+                            </ui:TextBox>
                         </StackPanel>
                     </ui:Card>
 
                     <!-- Sección Auditoría -->
-                    <ui:Card Background="{DynamicResource ControlFillColorDefaultBrush}">
+                    <!--<ui:Card Background="{DynamicResource ControlFillColorDefaultBrush}">
                         <StackPanel>
                             <TextBlock Text="Información de Auditoría" 
                                        FontSize="14" 
@@ -161,7 +178,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Columna 1 -->
+                                --><!-- Columna 1 --><!--
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Creado por:" Margin="5" VerticalAlignment="Center"/>
                                 <TextBox Grid.Row="0" Grid.Column="1" 
                                          Text="{Binding CurrentRepair.UsuarioCreador.Name, Mode=OneWay}" 
@@ -177,7 +194,7 @@
                                          Text="{Binding CurrentRepair.UsuarioAprobacion.Name, Mode=OneWay}" 
                                          IsReadOnly="True" Margin="5"/>
 
-                                <!-- Columna 2 -->
+                                --><!-- Columna 2 --><!--
                                 <TextBlock Grid.Row="0" Grid.Column="2" Text="Fecha aprobación:" Margin="5" VerticalAlignment="Center"/>
                                 <TextBox Grid.Row="0" Grid.Column="3" 
                                          Text="{Binding CurrentRepair.FechaAprobacion, StringFormat='dd/MM/yyyy HH:mm'}" 
@@ -194,7 +211,7 @@
                                          IsReadOnly="True" Margin="5"/>
                             </Grid>
                         </StackPanel>
-                    </ui:Card>
+                    </ui:Card>-->
                 </StackPanel>
             </ui:Card>
         </ScrollViewer>
@@ -246,7 +263,7 @@
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
 
                         <!-- Botones con iconos -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5" IsEnabled="{Binding IsInEditOrCreationMode}">
                             <ui:Button ToolTip="Agregar producto"
                                        Style="{StaticResource ToolbarButtonStyle}"
                                        Padding="8"
@@ -269,7 +286,7 @@
                 </Border>
 
                 <!-- Fila 1: DataGrid responsive -->
-                <DataGrid Grid.Row="1"
+                <DataGrid Grid.Row="1" IsEnabled="{Binding IsInEditOrCreationMode}"
                           ItemsSource="{Binding CurrentRepair.Detalles}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"

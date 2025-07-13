@@ -55,6 +55,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Controls.GenericList
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
+            SearchText = "";
             await LoadData();
         }
 

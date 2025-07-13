@@ -14,6 +14,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
+            <local1:MultiBooleanAndConverter x:Key="MultiBooleanAndConverter" />
             <local1:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <local1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <local1:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>

@@ -9,12 +9,16 @@ using ReparaStoreApp.Core.Services.ClientesService;
 using ReparaStoreApp.Core.Services.DispositivosService;
 using ReparaStoreApp.Core.Services.Login;
 using ReparaStoreApp.Core.Services.ProductosService;
+using ReparaStoreApp.Core.Services.ReparacionesService;
 using ReparaStoreApp.Core.Services.ServiciosService;
 using ReparaStoreApp.Data;
 using ReparaStoreApp.Data.Repositories.ClientesRepository;
 using ReparaStoreApp.Data.Repositories.DispositivosRepository;
+using ReparaStoreApp.Data.Repositories.InventarioRepository;
+using ReparaStoreApp.Data.Repositories.KardexRepository;
 using ReparaStoreApp.Data.Repositories.Login;
 using ReparaStoreApp.Data.Repositories.ProductosRepository;
+using ReparaStoreApp.Data.Repositories.ReparacionesRepository;
 using ReparaStoreApp.Data.Repositories.ServiciosRepository;
 using ReparaStoreApp.Entities.Models.Security;
 using ReparaStoreApp.Security;
@@ -22,6 +26,7 @@ using ReparaStoreApp.Security.Security;
 using ReparaStoreApp.WPF.ViewModels;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Configuracion;
+using ReparaStoreApp.WPF.ViewModels.Controls.DialogControl;
 using ReparaStoreApp.WPF.ViewModels.Controls.GenericList;
 using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
@@ -107,7 +112,10 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IClientesService, ClientesService>()
                 .Singleton<IServiciosService, ServiciosService>()
                 .Singleton<IProductosService, ProductosService>()
-                .Singleton<IDispositivosService, DispositivosService>();
+                .Singleton<IDispositivosService, DispositivosService>()
+                .Singleton<IReparacionesService, ReparacionesService>();
+            //.Singleton<IKardexService, KardexService>()
+            //.Singleton<IInventarioService, InventarioService>()
 
             // 4. Configuración de repositorios
             _container
@@ -115,12 +123,15 @@ namespace ReparaStoreApp.WPF
                 .Singleton<IClientesRepository, ClientesRepository>()
                 .Singleton<IServiciosRepository, ServiciosRepository>()
                 .Singleton<IProductosRepository, ProductosRepository>()
-                .Singleton<IDispositivosRepository, DispositivosRepository>();
+                .Singleton<IDispositivosRepository, DispositivosRepository>()
+                .Singleton<IReparacionesRepository, ReparacionesRepository>()
+                .Singleton<IKardexRepository, KardexRepository>()
+                .Singleton<IInventarioRepository, InventarioRepository>();
 
 
             // 5. Nuevos servicios para el listado genérico
             _container.PerRequest<IDataService<UserItem>, UserDataService>();
-            _container.PerRequest<GenericListViewModel<UserItem>>(); // ¡Esta línea es crucial!
+            _container.PerRequest<GenericListViewModel<UserItem>>(); 
             _container.PerRequest<IDataService<ClientesItem>, ClientesDataService>();
             _container.PerRequest<GenericListViewModel<ClientesItem>>();
             _container.PerRequest<IDataService<DispositivosItem>, DispositivosDataService>();
@@ -130,8 +141,12 @@ namespace ReparaStoreApp.WPF
             _container.PerRequest<IDataService<ServiciosItem>, ServiciosDataService>();
             _container.PerRequest<GenericListViewModel<ServiciosItem>>();
 
+            // 6.Registro de los diálogos genéricos
+            _container.PerRequest<GenericDialogViewModel>();
+            _container.PerRequest<OptionsDialogViewModel>();
+            _container.PerRequest<GenericSelectionDialogViewModel<ProductosItem>>(); // Diálogo genérico con lista
 
-            // 6. Registra tus ViewModels aquí
+            // 7. Registra tus ViewModels aquí
             _container
                 .PerRequest<ShellViewModel>()
                 .PerRequest<LoginViewModel>()

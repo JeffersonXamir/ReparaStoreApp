@@ -24,6 +24,7 @@
             <ui:SymbolIcon Symbol="Search24" Margin="4,0" VerticalAlignment="Center" />
             <ui:TextBox Margin="8,0,0,0"
                         PlaceholderText="Buscar..."
+                        IsEnabled="{Binding IsListEnabled}"
                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="KeyUp">

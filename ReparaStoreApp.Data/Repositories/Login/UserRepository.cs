@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReparaStoreApp.Entities.Models.Security;
+using System.Linq.Dynamic.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,24 +33,24 @@ namespace ReparaStoreApp.Data.Repositories.Login
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<IEnumerable<User>> SearchAsync(string searchText, int page, int pageSize)
+        public async Task<IEnumerable<User>> SearchAsync(string searchText, int page, int pageSize, string? filter = null)
         {
-            return await _context.Users
+            return _context.Users
                 .Where(u => string.IsNullOrEmpty(searchText) ||
-                           u.Name.Contains(searchText) )
-                           //u.FullName.Contains(searchText))
+                           u.Name.Contains(searchText))
+                //.Where(filter ?? "")
                 .OrderBy(u => u.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<int> GetCountAsync(string searchText)
         {
             return await _context.Users
                 .Where(u => string.IsNullOrEmpty(searchText) ||
-                          u.Name.Contains(searchText) )
-                          //u..Contains(searchText))
+                          u.Name.Contains(searchText))
+                //u..Contains(searchText))
                 .CountAsync();
         }
 
@@ -61,6 +62,9 @@ namespace ReparaStoreApp.Data.Repositories.Login
             }
             else
             {
+                var itemRemove = _context.UserRoles.Where(X => X.UserId == user.Id);
+                _context.UserRoles.RemoveRange(itemRemove);
+
                 _context.Users.Update(user);
             }
 
@@ -77,6 +81,30 @@ namespace ReparaStoreApp.Data.Repositories.Login
         {
             user.IsActive = true;
             _context.SaveChanges();
+        }
+
+        public async Task<Params> GetParamByCode(string code)
+        {
+            return await _context.ParamsDb.FirstOrDefaultAsync(p => p.Code == code);
+        }
+
+        public async Task<IEnumerable<Role>> SearchRolesAsync(string searchText, int page, int pageSize)
+        {
+            return await _context.Roles
+                    .Where(u => string.IsNullOrEmpty(searchText) ||
+                               u.Name.Contains(searchText))
+                    //u.FullName.Contains(searchText))
+                    .OrderBy(u => u.Name)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync(string? filter = null)
+        {
+            return _context.Users
+                .Where(filter ?? "")
+                .ToList();
         }
     }
 }

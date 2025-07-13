@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
+using Microsoft.Extensions.Options;
 using ReparaStoreApp.Common;
 using ReparaStoreApp.Common.Entities;
 using ReparaStoreApp.Core.Services.Login;
@@ -64,6 +65,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             set { _titulo = value; NotifyOfPropertyChange(() => Titulo); }
         }
 
+        public BindableCollection<RolesItem> Options { get; set; }
+
         public UserViewModel(IAuthService authService,
                             IWindowManager windowManager,
                             IEventAggregator eventAggregator,
@@ -77,6 +80,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             _userDataService = userDataService;
             _userService = userService;
             _mapper = mapper;
+
+            CargarRoles();
 
             Titulo = "Gestión de Usuarios";
 
@@ -94,15 +99,53 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                     await LoadUserDetails(selectedItem.Id);
                 }
             };
+
         }
 
+        public async Task CargarRoles()
+        {
+            try
+            {
+                Options?.Clear();
+
+                var Details = await _userService.SearchRolesAsync("", 1, 100);
+                Options = _mapper.Map<BindableCollection<RolesItem>>(Details);
+
+                var settings = new Settings();
+                int userId = settings?.UserId ?? 1;
+
+                if (userId != 1) 
+                {
+                    var item = Options.FirstOrDefault(x=> x.Id == 1);
+                    if(item != null)
+                        Options.Remove(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                await _eventAggregator.PublishOnUIThreadAsync(new ErrorMessage("Error al cargar detalles del Registro"));
+            }
+
+        }
 
         private async Task LoadUserDetails(int userId)
         {
             try
             {
                 var userDetails = await _userDataService.GetByIdAsync(userId);
-                // Actualiza las propiedades necesarias aquí
+                foreach (var item in Options)
+                {
+                    item.IsChecked = false;
+                }
+
+                foreach (var role in userDetails.UserRoles)
+                {
+                    var roleItem = Options.FirstOrDefault(r => r.Id == role.RoleId);
+                    if (roleItem != null)
+                    {
+                        roleItem.IsChecked = true; // Marcar el rol como seleccionado
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -118,6 +161,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
         {
             try
             {
+                CargarRoles();
+
                 CreationMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
 
@@ -173,11 +218,25 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                     return;
                 }
 
+                var roles = Options.Where(r => r.IsChecked).ToList();
+                if (roles.Count == 0)
+                {
+                    await ShowNotificationMessage("Debe seleccionar al menos un rol para el usuario.");
+                    return;
+                }
+
+                EditCopy.UserRoles?.Clear(); // Limpiar roles existentes
+                EditCopy.UserRoles = roles.Select(r => new UserRole
+                {
+                    RoleId = r.Id,
+                    UserId = EditCopy.Id // Asignar el ID del usuario
+                }).ToList();
+
                 if (CreationMode)
                 {
                     // Lógica para nuevo usuario
                     await _userService.SaveUserAsync(EditCopy);
-                    
+
                     await ShowNotification("Usuario creado exitosamente");
                 }
                 else if (EditMode)

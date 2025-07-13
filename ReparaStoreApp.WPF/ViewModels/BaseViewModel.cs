@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
+using ReparaStoreApp.Common;
 using ReparaStoreApp.WPF.Models;
+using ReparaStoreApp.WPF.ViewModels.Controls.DialogControl;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Controls;
 
@@ -14,12 +16,20 @@ namespace ReparaStoreApp.WPF.ViewModels
         private string _statusMessage;
         private bool _isBusy;
         private CancellationTokenSource _statusMessageCts;
+        private readonly Lazy<GenericDialogViewModel> _dialogViewModel;
+        private readonly Lazy<OptionsDialogViewModel> _optionsDialogViewModel;
 
         protected BaseViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _dialogViewModel = new Lazy<GenericDialogViewModel>(() =>
+            IoC.Get<GenericDialogViewModel>());
+            _optionsDialogViewModel = new Lazy<OptionsDialogViewModel>(() =>
+            IoC.Get<OptionsDialogViewModel>());
         }
 
+        protected GenericDialogViewModel Dialog => _dialogViewModel.Value;
+        protected OptionsDialogViewModel OptionsDialog => _optionsDialogViewModel.Value;
         public bool HasFocus
         {
             get => _hasFocus;
@@ -245,6 +255,57 @@ namespace ReparaStoreApp.WPF.ViewModels
             };
 
             _ = await uiMessageBox.ShowDialogAsync();
+        }
+
+        protected async Task<IEnumerable<OptionsItem>> ShowOptionsDialogAsync(
+        string title,
+        IEnumerable<OptionsItem> options,
+        string message = null,
+        SymbolRegular? icon = null,
+        bool allowMultipleSelection = false)
+        {
+            return await OptionsDialog.ShowDialogAsync(
+                title: title,
+                options: options,
+                message: message,
+                icon: icon,
+                allowMultipleSelection: allowMultipleSelection);
+        }
+
+        protected async Task<OptionsItem> ShowSingleOptionDialogAsync(
+            string title,
+            IEnumerable<OptionsItem> options,
+            string message = null,
+            SymbolRegular? icon = null)
+        {
+            var result = await OptionsDialog.ShowDialogAsync(
+                title: title,
+                options: options,
+                message: message,
+                icon: icon,
+                allowMultipleSelection: false);
+
+            return result.FirstOrDefault();
+        }
+
+        protected async Task ShowMessageAsync(string title, string message)
+        {
+            var dialog = IoC.Get<GenericDialogViewModel>();
+            await dialog.ShowDialogAsync(
+                title: title,
+                message: message,
+                primaryButtonText: "Aceptar",
+                showSecondaryButton: false);
+        }
+
+        protected async Task<bool> ShowConfirmationAsync(string title, string message)
+        {
+            var dialog = IoC.Get<GenericDialogViewModel>();
+            return await dialog.ShowDialogAsync(
+                title: title,
+                message: message,
+                primaryButtonText: "Sí",
+                secondaryButtonText: "No");
         }
 
         //protected override void OnDeactivate(bool close)

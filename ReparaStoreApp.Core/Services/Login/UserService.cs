@@ -36,9 +36,9 @@ namespace ReparaStoreApp.Core.Services.Login
             return await _userRepository.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize)
+        public async Task<IEnumerable<User>> SearchUsersAsync(string searchText, int page, int pageSize, string? filter = null)
         {
-            return await _userRepository.SearchAsync(searchText, page, pageSize);
+            return await _userRepository.SearchAsync(searchText, page, pageSize,filter);
         }
 
         public async Task<int> GetUserCountAsync(string searchText)
@@ -53,6 +53,7 @@ namespace ReparaStoreApp.Core.Services.Login
             userDb.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
             userDb.CreatedAt = DateTime.UtcNow;
             userDb.IsActive = true;
+            
             await _userRepository.SaveAsync(userDb);
         }
 
@@ -68,7 +69,7 @@ namespace ReparaStoreApp.Core.Services.Login
             userDb.Email = user.Email;
             userDb.PhoneNumber = user.PhoneNumber;
             userDb.Note = user.Note;
-
+            userDb.UserRoles = user.UserRoles;
 
             // Verificar si el campo de contraseña tiene algo
             if (!string.IsNullOrWhiteSpace(user.PasswordHash))
@@ -92,6 +93,22 @@ namespace ReparaStoreApp.Core.Services.Login
             if (user == null) return;
             var userDb = await _userRepository.GetByIdAsync(user.Id);
             await _userRepository.Delete(userDb);
+        }
+
+        public async Task<ParamsItem> GetParamByCode(string code)
+        {
+            var param = await _userRepository.GetParamByCode(code);
+            return _mapper.Map<ParamsItem>(param);
+        }
+
+        public async Task<IEnumerable<Role>> SearchRolesAsync(string searchText, int page, int pageSize)
+        {
+            return await _userRepository.SearchRolesAsync(searchText, page, pageSize);
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync(string? filter = null)
+        {
+            return await _userRepository.GetAllUsersAsync(filter);
         }
     }
 }

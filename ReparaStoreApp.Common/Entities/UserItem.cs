@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReparaStoreApp.Entities.Models.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,6 @@ namespace ReparaStoreApp.Common.Entities
             set { _isActive = value; NotifyOfPropertyChange(()=> IsActive); }
         }
 
+        public ICollection<UserRole> UserRoles { get; set; }
     }
 }

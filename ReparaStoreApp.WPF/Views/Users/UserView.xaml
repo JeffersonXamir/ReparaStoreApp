@@ -345,6 +345,24 @@
                                      IsReadOnly="{Binding IsInEditOrCreationMode, Converter={StaticResource InverseBooleanConverter}}"
                                      Margin="5"/>
                             </Grid>
+
+                            <!-- Lista de CheckBoxes con tres estados -->
+                            <TextBlock Text="Permisos" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,20,0,5"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                            <ItemsControl ItemsSource="{Binding Options}" IsEnabled="{Binding IsInEditOrCreationMode}" >
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
+                                                  IsThreeState="False"
+                                                  IsChecked="{Binding IsChecked, Mode=TwoWay}" 
+                                                  Margin="5,2"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </ui:Card>
 

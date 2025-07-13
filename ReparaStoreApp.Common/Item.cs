@@ -32,4 +32,6 @@ namespace ReparaStoreApp.Common
         public string Code { get; set; }
         public string Name { get; set; }
     }
+
+    public class ItemRecord : Item { }
 }
