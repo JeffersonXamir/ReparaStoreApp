@@ -11,7 +11,7 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class ClientesItem : Item
     {
-        private string _identificacion;
+        private string _identificacion = string.Empty;
         public string Identificacion
         {
             get => _identificacion;
@@ -22,7 +22,7 @@ namespace ReparaStoreApp.Common.Entities
             }
         }
 
-        private string _primerNombre;
+        private string _primerNombre = string.Empty;
         public string PrimerNombre
         {
             get => _primerNombre;
@@ -33,7 +33,7 @@ namespace ReparaStoreApp.Common.Entities
             }
         }
 
-        private string _segundoNombre;
+        private string _segundoNombre = string.Empty;
         public string SegundoNombre
         {
             get => _segundoNombre;
@@ -44,7 +44,7 @@ namespace ReparaStoreApp.Common.Entities
             }
         }
 
-        private string _primerApellido;
+        private string _primerApellido = string.Empty;
         public string PrimerApellido
         {
             get => _primerApellido;
@@ -55,7 +55,7 @@ namespace ReparaStoreApp.Common.Entities
             }
         }
 
-        private string _segundoApellido;
+        private string _segundoApellido = string.Empty;
         public string SegundoApellido
         {
             get => _segundoApellido;
@@ -74,10 +74,10 @@ namespace ReparaStoreApp.Common.Entities
             set { _fechaNacimiento = value; NotifyOfPropertyChange(()=> FechaNacimiento); }
         }
 
-        public string Correo { get; set; }
-        public string Telefono { get; set; }
-        public string Direccion { get; set; }
-        public string Nota { get; set; }
+        public string Correo { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public string Direccion { get; set; } = string.Empty;
+        public string Nota { get; set; } = string.Empty;
         public DateTime FechaCreacion { get; set; }
         public int UsuarioCreadorId { get; set; }
         public User UsuarioCreador { get; set; }

@@ -1,0 +1,146 @@
+﻿<UserControl x:Class="ReparaStoreApp.WPF.Views.Kardex.KardexView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Kardex"
+             mc:Ignorable="d"
+             d:DesignHeight="600"
+             d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Filtros -->
+        <ui:Card Grid.Row="0"
+                 Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Filtrar por:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0" />
+
+                <DatePicker x:Name="FechaInicio"
+                            SelectedDate="{Binding FechaInicio}"
+                            Width="150"
+                            Margin="0,0,10,0"
+                            ToolTip="Fecha inicio" />
+
+                <DatePicker x:Name="FechaFin"
+                            SelectedDate="{Binding FechaFin}"
+                            Width="150"
+                            Margin="0,0,10,0"
+                            ToolTip="Fecha fin" />
+
+                <ComboBox x:Name="TipoMovimiento"
+                          ItemsSource="{Binding TiposMovimiento}"
+                          SelectedValue="{Binding TipoMovimientoSeleccionado}"
+                          DisplayMemberPath="Descripcion"
+                          SelectedValuePath="Id"
+                          Width="150"
+                          Margin="0,0,10,0"
+                          ToolTip="Tipo de movimiento" />
+
+                <ui:TextBox x:Name="FiltroProducto"
+                            Text="{Binding FiltroProducto, UpdateSourceTrigger=PropertyChanged}"
+                            Width="200"
+                            Margin="0,0,10,0"
+                            PlaceholderText="Producto" />
+
+                <ui:Button Content="Filtrar"
+                           Icon="Filter"
+                           Margin="0,0,10,0"
+                           cal:Message.Attach="[Event Click] = [Action FiltrarKardex]" />
+
+                <ui:Button Content="Actualizar"
+                           Icon="Refresh"
+                           cal:Message.Attach="[Event Click] = [Action ActualizarKardex]" />
+            </StackPanel>
+        </ui:Card>
+
+        <!-- Resumen -->
+        <ui:Card Grid.Row="1"
+                 Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Total movimientos:"
+                           Margin="0,0,10,0" />
+                <TextBlock Text="{Binding TotalMovimientos}"
+                           FontWeight="Bold"
+                           Margin="0,0,20,0" />
+
+                <TextBlock Text="Ingresos:"
+                           Margin="0,0,10,0" />
+                <TextBlock Text="{Binding TotalIngresos}"
+                           FontWeight="Bold"
+                           Foreground="Green"
+                           Margin="0,0,20,0" />
+
+                <TextBlock Text="Egresos:"
+                           Margin="0,0,10,0" />
+                <TextBlock Text="{Binding TotalEgresos}"
+                           FontWeight="Bold"
+                           Foreground="Red"
+                           Margin="0,0,20,0" />
+
+                <TextBlock Text="Saldo total:"
+                           Margin="0,0,10,0" />
+                <TextBlock Text="{Binding SaldoTotal}"
+                           FontWeight="Bold" />
+            </StackPanel>
+        </ui:Card>
+
+        <!-- Listado de kardex -->
+        <ui:Card Grid.Row="2"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Stretch">
+            <DataGrid x:Name="KardexItems"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      ItemsSource="{Binding KardexItems}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      VerticalContentAlignment="Stretch"
+                      ColumnWidth="*"
+                      Margin="0"
+                      Padding="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Fecha"
+                                        Binding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"
+                                        Width="0.8*" />
+                    <DataGridTextColumn Header="Tipo"
+                                        Binding="{Binding Tipo}"
+                                        Width="0.6*" />
+                    <DataGridTextColumn Header="Código"
+                                        Binding="{Binding Producto.Codigo}"
+                                        Width="1*" />
+                    <DataGridTextColumn Header="Producto"
+                                        Binding="{Binding Producto.Nombre}"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Cantidad"
+                                        Binding="{Binding Cantidad}"
+                                        Width="0.6*" />
+                    <DataGridTextColumn Header="P. Unitario"
+                                        Binding="{Binding PrecioUnitario, StringFormat={}{0:C}}"
+                                        Width="0.8*" />
+                    <DataGridTextColumn Header="Total"
+                                        Binding="{Binding Total, StringFormat={}{0:C}}"
+                                        Width="0.8*" />
+                    <DataGridTextColumn Header="Notas"
+                                        Binding="{Binding Notas}"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Usuario"
+                                        Binding="{Binding UsuarioCreador.Name}"
+                                        Width="1.2*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </ui:Card>
+    </Grid>
+</UserControl>

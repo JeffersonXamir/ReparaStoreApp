@@ -280,6 +280,8 @@ namespace ReparaStoreApp.Core.Services.ReparacionesService
         {
             switch (estadoActual)
             {
+                case EstadoReparacion.Ingresado:
+                    return nuevoEstado == EstadoReparacion.Pendiente;
                 case EstadoReparacion.Pendiente:
                     return nuevoEstado == EstadoReparacion.Aprobado || nuevoEstado == EstadoReparacion.Rechazado;
                 case EstadoReparacion.Aprobado:

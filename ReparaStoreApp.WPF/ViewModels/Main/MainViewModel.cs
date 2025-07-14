@@ -1,13 +1,16 @@
 ﻿using Caliburn.Micro;
 using ReparaStoreApp.Security.Security;
+using ReparaStoreApp.WPF.Properties;
 using ReparaStoreApp.WPF.ViewModels.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Configuracion;
 using ReparaStoreApp.WPF.ViewModels.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Home;
+using ReparaStoreApp.WPF.ViewModels.Kardex;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Productos;
 using ReparaStoreApp.WPF.ViewModels.Reparaciones;
 using ReparaStoreApp.WPF.ViewModels.Servicios;
+using ReparaStoreApp.WPF.ViewModels.Stock;
 using ReparaStoreApp.WPF.ViewModels.Users;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -21,7 +24,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
         private readonly IAuthService _authService;
         private readonly IWindowManager _windowManager;
         private readonly Dictionary<ToolbarButtonsAction, bool> _buttonStates = new();
-        
+
         private bool _isNavigationEnabled = true;
         public bool IsNavigationEnabled
         {
@@ -68,6 +71,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
 
         private void InitializeMenu()
         {
+            var settings = new Settings();
+            int userId = settings?.UserId ?? 0;
             // Menú principal
             MenuItems.Add(CreateNavigationItem("Inicio", SymbolRegular.Home24, typeof(HomeViewModel)));
             MenuItems.Add(CreateNavigationItem("Clientes", SymbolRegular.People24, typeof(ClientesViewModel)));
@@ -76,6 +81,17 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
             MenuItems.Add(CreateNavigationItem("Servicios", SymbolRegular.Wrench24, typeof(ServiciosViewModel)));
             MenuItems.Add(CreateNavigationItem("Reparaciones", SymbolRegular.Toolbox24, typeof(ReparacionesViewModel)));
 
+            //menu de inventario
+            var inventarioItem = new NavigationViewItem
+            {
+                Content = "Inventario",
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Table24 }
+            };
+            inventarioItem.MenuItems.Add(CreateNavigationItem("Reporte Stock", SymbolRegular.DocumentText24, typeof(StockViewModel)));
+            inventarioItem.MenuItems.Add(CreateNavigationItem("Reporte Kardex", SymbolRegular.DocumentBulletList24, typeof(KardexViewModel)));
+
+            MenuItems.Add(inventarioItem);
+
             // Menú de configuración (con subitems)
             var settingsItem = new NavigationViewItem
             {
@@ -83,9 +99,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Main
                 Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 }
             };
 
-            settingsItem.MenuItems.Add(CreateNavigationItem("Usuarios", SymbolRegular.Person24, typeof(UserViewModel)));
-            settingsItem.MenuItems.Add(CreateNavigationItem("Ajustes", SymbolRegular.Settings24, typeof(SettingsViewModel)));
+            //si es admin se agrega usuarios 
+            if (userId == 1)
+            {
+                settingsItem.MenuItems.Add(CreateNavigationItem("Usuarios", SymbolRegular.Person24, typeof(UserViewModel)));
+            }
 
+            settingsItem.MenuItems.Add(CreateNavigationItem("Ajustes", SymbolRegular.Settings24, typeof(SettingsViewModel)));
 
             MenuItems.Add(settingsItem);
 

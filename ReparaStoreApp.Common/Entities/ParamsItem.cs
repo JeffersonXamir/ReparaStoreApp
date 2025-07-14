@@ -9,8 +9,8 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class ParamsItem : Item
     {
-        public string Valor { get; set; }
-        public string Nota { get; set; }
+        public string Valor { get; set; } = string.Empty;
+        public string Nota { get; set; } = string.Empty;
         public bool Activo { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int UsuarioCreadorId { get; set; }

@@ -16,6 +16,39 @@ namespace ReparaStoreApp.Data.Repositories.KardexRepository
         {
             _context = context;
         }
+        public async Task<IEnumerable<Kardex>> GetKardexWithDetails(DateTime? fechaInicio, DateTime? fechaFin, int? tipoMovimiento, string filtroProducto)
+        {
+            var query = _context.Kardex
+                .Include(k => k.Producto)
+                .Include(k => k.Usuario)
+                .Include(k => k.UsuarioCreador)
+                .Include(k => k.UsuarioEdicion)
+                .AsQueryable();
+
+            if (fechaInicio.HasValue)
+            {
+                query = query.Where(k => k.Fecha.Date >= fechaInicio.Value.Date);
+            }
+
+            if (fechaFin.HasValue)
+            {
+                query = query.Where(k => k.Fecha.Date <= fechaFin.Value.Date);
+            }
+
+            if (tipoMovimiento.HasValue)
+            {
+                query = query.Where(k => (int)k.Tipo == tipoMovimiento.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filtroProducto))
+            {
+                query = query.Where(k =>
+                    k.Producto.Nombre.Contains(filtroProducto) ||
+                    k.Producto.Codigo.Contains(filtroProducto));
+            }
+
+            return await query.OrderByDescending(k => k.Fecha).ToListAsync();
+        }
 
         public async Task<bool> RegistrarMovimientoAsync(int itemId, TipoMovimientoKardex tipo, int cantidad, decimal precioUnitario, string notas, int usuarioId)
         {

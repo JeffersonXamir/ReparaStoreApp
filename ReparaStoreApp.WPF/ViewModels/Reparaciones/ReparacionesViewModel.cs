@@ -414,11 +414,18 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                     }
 
                     await ShowNotification("Registro creado exitosamente");
+                    await ClearForm();
                 }
                 else if (EditMode)
                 {
                     // Lógica para edición
-                    await _ReparacionesService.UpdateAsync(CurrentRepair);
+                    var response = await _ReparacionesService.UpdateAsync(CurrentRepair);
+                    if (!response.Success)
+                    {
+                        await ShowNotification(response.Error);
+                        return;
+                    }
+
                     //CurrentClientes = EditCopy; // Actualizar el original
                     await ShowNotificationMessage("Registro actualizado exitosamente");
                     await ShowNotification("Registro actualizado exitosamente");
@@ -427,6 +434,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 // Finalizar modo
                 CreationMode = false;
                 EditMode = false;
+
+                NotifyOfPropertyChange(() => IsInEditOrCreationMode);
                 //_ClientesListViewModel.IsListEnabled = true;
                 //await _ClientesListViewModel.LoadData();
                 await base.Create();

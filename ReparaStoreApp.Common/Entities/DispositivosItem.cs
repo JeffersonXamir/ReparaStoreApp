@@ -12,10 +12,10 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class DispositivosItem : Item
     {
-        public string Marca { get; set; }
-        public string Modelo { get; set; }
-        public string NumeroSerie { get; set; }
-        public string Descripcion { get; set; }
+        public string Marca { get; set; } = string.Empty;
+        public string Modelo { get; set; } = string.Empty;
+        public string NumeroSerie { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
         public EstadoDispositivo Estado { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int UsuarioCreadorId { get; set; }

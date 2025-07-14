@@ -88,6 +88,8 @@
                                 <ui:TextBox Grid.Row="2"
                                             Grid.Column="1"
                                             Text="{Binding EditCopy.Name}"
+                                            PlaceholderText="campo autocompletado"
+                                            ToolTip="Campo autocompletado"
                                             IsEnabled="{Binding IsInEditOrCreationMode}"
                                             IsReadOnly="True"
                                             Margin="5" />

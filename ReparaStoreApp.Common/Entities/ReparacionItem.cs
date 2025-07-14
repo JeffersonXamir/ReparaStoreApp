@@ -14,12 +14,12 @@ namespace ReparaStoreApp.Common.Entities
     public class ReparacionItem : DocumentItem
     {
         public DateTime Fecha { get; set; } = DateTime.Now;
-        public string NotasIngreso { get; set; } // Detalles del problema
-        public string NotasReparado { get; set; } // Detalles de solución
+        public string NotasIngreso { get; set; } = string.Empty;
+        public string NotasReparado { get; set; } = string.Empty;
         public decimal CostoEstimado { get; set; }
         public decimal CostoFinal { get; set; }
         public EstadoReparacion Estado { get; set; }
-        public bool Activo { get; set; }
+        public bool Activo { get; set; } = false;
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public int UsuarioCreadorId { get; set; }
         public User UsuarioCreador { get; set; }

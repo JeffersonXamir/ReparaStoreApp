@@ -8,7 +8,7 @@ namespace ReparaStoreApp.Common.Entities
 {
     public class RolesItem : Item
     {
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         private bool _isChecked;
         public bool IsChecked

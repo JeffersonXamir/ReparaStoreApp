@@ -132,6 +132,10 @@ namespace ReparaStoreApp.Common.Mappings
             CreateMap<RolesItem, Role>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<Inventario, StockItem>();
+
+            CreateMap<StockItem, Inventario>();
         }
     }
 }
