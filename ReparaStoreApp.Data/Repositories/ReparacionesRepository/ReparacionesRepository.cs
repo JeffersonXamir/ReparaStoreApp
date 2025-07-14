@@ -13,6 +13,11 @@ namespace ReparaStoreApp.Data.Repositories.ReparacionesRepository
     {
         private readonly AppDbContext _context;
 
+        public ReparacionesRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<Reparacion> GetByIdAsync(int id)
         {
             return await _context.Reparaciones
@@ -61,6 +66,7 @@ namespace ReparaStoreApp.Data.Repositories.ReparacionesRepository
             if (reparacion.Id == 0)
             {
                 await _context.Reparaciones.AddAsync(reparacion);
+                reparacion.Numero = $"{reparacion.Numero}{reparacion.Id.ToString().PadLeft(6, '0')}";
             }
             else
             {

@@ -112,12 +112,12 @@ namespace ReparaStoreApp.Common.Mappings
                 .ForMember(dest => dest.CajeroId, opt => opt.MapFrom(src => src.CajeroId))
                 .ForMember(dest => dest.FacturaId, opt => opt.MapFrom(src => src.FacturaId))
                 .ForMember(dest => dest.FechaEdicion, opt => opt.MapFrom(src => src.FechaEdicion))
-                .ForMember(dest => dest.UsuarioEdicionId, opt => opt.MapFrom(src => src.UsuarioEdicionId))
-                .ForMember(dest => dest.Detalles, opt => opt.Ignore()); // Los detalles se manejan separadamente
+                .ForMember(dest => dest.UsuarioEdicionId, opt => opt.MapFrom(src => src.UsuarioEdicionId)); // Los detalles se manejan separadamente
 
             // Mapeo para los detalles
-            CreateMap<ReparacionDetalle, ReparacionDetalleItem>()
-                .ReverseMap();
+            CreateMap<ReparacionDetalle, ReparacionDetalleItem>();
+
+            CreateMap<ReparacionDetalleItem, ReparacionDetalle>();
 
             CreateMap<Params, ParamsItem>();
 

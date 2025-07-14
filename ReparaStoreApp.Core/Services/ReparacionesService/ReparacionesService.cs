@@ -47,9 +47,18 @@ namespace ReparaStoreApp.Core.Services.ReparacionesService
             {
                 var reparacion = _mapper.Map<Reparacion>(reparacionItem);
                 reparacion.Numero = GenerarNumeroReparacion();
-                reparacion.Estado = EstadoReparacion.Pendiente;
+                reparacion.Estado = EstadoReparacion.Ingresado;
+                reparacion.NotasReparado = "";
                 reparacion.Activo = true;
                 reparacion.FechaCreacion = DateTime.Now;
+                reparacion.UsuarioReparadoId = 1;
+                reparacion.UsuarioAprobacionId = 1;
+
+                foreach (var detalle in reparacion.Detalles)
+                {
+                    // Solo asignamos el ItemId, y eliminamos el objeto Item duplicado
+                    detalle.Item = null;
+                }
 
                 await _reparacionesRepository.SaveAsync(reparacion);
 
@@ -261,9 +270,10 @@ namespace ReparaStoreApp.Core.Services.ReparacionesService
             var year = DateTime.Now.ToString("yy");
             var month = DateTime.Now.ToString("MM");
             var day = DateTime.Now.ToString("dd");
-            var random = new Random().Next(1000, 9999).ToString();
+            //var random = new Random().Next(1000, 9999).ToString();
+            var random = "";
 
-            return $"REP-{year}{month}{day}-{random}";
+            return $"{year}{month}{day}{random}";
         }
 
         private bool ValidarTransicionEstado(EstadoReparacion estadoActual, EstadoReparacion nuevoEstado)

@@ -250,11 +250,12 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             RepairStates = new BindableCollection<EstadosReparacionItem>
             {
-                new EstadosReparacionItem { Id = 1, Code = "001", Name = "Pendiente", Estado = EstadoReparacion.Pendiente },
-                new EstadosReparacionItem { Id = 2, Code = "002", Name = "Aprobado", Estado = EstadoReparacion.Aprobado},
-                new EstadosReparacionItem { Id = 3, Code = "003", Name = "En Proceso", Estado = EstadoReparacion.EnProceso },
-                new EstadosReparacionItem { Id = 4, Code = "004", Name = "Completado", Estado = EstadoReparacion.Completado },
-                new EstadosReparacionItem { Id = 5, Code = "005", Name = "Rechazado", Estado = EstadoReparacion.Rechazado }
+                new EstadosReparacionItem { Id = 1, Code = "001", Name = "Ingresado", Estado = EstadoReparacion.Ingresado },
+                new EstadosReparacionItem { Id = 2, Code = "002", Name = "Pendiente", Estado = EstadoReparacion.Pendiente },
+                new EstadosReparacionItem { Id = 3, Code = "003", Name = "Aprobado", Estado = EstadoReparacion.Aprobado},
+                new EstadosReparacionItem { Id = 4, Code = "004", Name = "En Proceso", Estado = EstadoReparacion.EnProceso },
+                new EstadosReparacionItem { Id = 5, Code = "005", Name = "Completado", Estado = EstadoReparacion.Completado },
+                new EstadosReparacionItem { Id = 6, Code = "006", Name = "Rechazado", Estado = EstadoReparacion.Rechazado }
             };
             await Task.CompletedTask;
         }
@@ -315,6 +316,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 CreationMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
 
+                await ClearForm();
 
                 var settings = new Settings();
                 int userId = settings.UserId;
@@ -325,11 +327,12 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 CurrentRepair.Fecha = DateTime.Now.Date;
                 CurrentRepair.FechaCreacion = DateTime.Now;
                 CurrentRepair.UsuarioCreadorId = userId;
+                CurrentRepair.CajeroId = userId;
                 //CurrentRepair.Estado = EstadoReparacion.Aprobado;
 
                 CurrentRepair.Detalles?.Clear();
 
-                RepairStateSelect = RepairStates?.FirstOrDefault(x => x.Estado == EstadoReparacion.Pendiente);
+                RepairStateSelect = RepairStates?.FirstOrDefault(x => x.Estado == EstadoReparacion.Ingresado);
 
                 var paramIVA = await _UserService.GetParamByCode("SYS-IVA");
                 if (paramIVA == null)
@@ -392,7 +395,12 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                 if (CreationMode)
                 {
                     // Lógica para nuevo Registro
-                    await _ReparacionesService.CreateAsync(CurrentRepair);
+                    var response = await _ReparacionesService.CreateAsync(CurrentRepair);
+                    if (!response.Success)
+                    {
+                        await ShowNotification(response.Error);
+                        return;
+                    }
 
                     await ShowNotification("Registro creado exitosamente");
                 }
@@ -661,7 +669,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
 
                 switch (CurrentRepair.Estado)
                 {
-                    case EstadoReparacion.Pendiente:
+                    case EstadoReparacion.Ingresado:
 
                         if (CurrentRepair.Detalle?.Length == 0 || string.IsNullOrEmpty(CurrentRepair.Detalle))
                         {
@@ -677,6 +685,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                             return validateForm;
                         }
 
+                        break;
+                    case EstadoReparacion.Pendiente:
                         break;
                     case EstadoReparacion.Aprobado:
                         break;

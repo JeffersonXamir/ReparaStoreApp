@@ -55,6 +55,7 @@ namespace ReparaStoreApp.Entities.Models.Store
 
     public enum EstadoReparacion
     {
+        Ingresado,
         Pendiente,
         Aprobado,
         EnProceso,
