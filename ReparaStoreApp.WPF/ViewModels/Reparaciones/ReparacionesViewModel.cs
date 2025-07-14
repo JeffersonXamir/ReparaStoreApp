@@ -57,7 +57,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         public DispositivosItem DeviceSelect
         {
             get { return _deviceSelect; }
-            set { _deviceSelect = value; NotifyOfPropertyChange(() => DeviceSelect); _= OnSelectDispositivo(); }
+            set { _deviceSelect = value; NotifyOfPropertyChange(() => DeviceSelect); _ = OnSelectDispositivo(); }
         }
 
         private BindableCollection<ClientesItem> _availableClients;
@@ -154,7 +154,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         public bool IsLoading
         {
             get { return _isLoading; }
-            set { _isLoading = value; NotifyOfPropertyChange(()=> IsLoading); }
+            set { _isLoading = value; NotifyOfPropertyChange(() => IsLoading); }
         }
 
         public ReparacionesViewModel(
@@ -324,6 +324,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+
                 CreationMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
 
@@ -382,6 +383,11 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                     return;
                 }
 
+                if (CurrentRepair.Estado == EstadoReparacion.Rechazado)
+                {
+                    await ShowNotificationMessage($"El documento ha sido Rechazado y ya no puede ser editado.");
+                    return;
+                }
 
                 EditMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
@@ -401,6 +407,15 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+                if (CreationMode)
+                {
+                    if (CurrentRepair.Estado != EstadoReparacion.Ingresado)
+                    {
+                        await ShowNotificationMessage($"El estado inicial del documento debe ser \"Ingresado\". No se permite crear documentos directamente con estado \"{CurrentRepair.Estado}\".");
+                        return;
+                    }
+                }
+                
                 IsBusy = true;
 
                 var validateForm = await ValidateForm();
@@ -412,6 +427,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
 
                 if (CreationMode)
                 {
+
                     // Lógica para nuevo Registro
                     var response = await _ReparacionesService.CreateAsync(CurrentRepair);
                     if (!response.Success)
