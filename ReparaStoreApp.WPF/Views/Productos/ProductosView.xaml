@@ -1,0 +1,202 @@
+﻿<UserControl x:Class="ReparaStoreApp.WPF.Views.Productos.ProductosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ReparaStoreApp.WPF.Views.Productos"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Lista de productos -->
+        <ContentControl Grid.Column="0" 
+                        cal:View.Model="{Binding ProductosList}"
+                        Margin="5"/>
+
+        <!-- Detalles del producto con ScrollViewer -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ui:Card Margin="10" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Detalles del Producto" 
+                               FontSize="18" 
+                               FontWeight="Bold"
+                               Margin="0,0,0,15"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+                    <!-- Sección Información Básica -->
+                    <ui:Card Margin="0,0,0,15" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Información Básica" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,10"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                            <Grid Margin="0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="ID:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                         Text="{Binding EditCopy.Id, Mode=OneWay}" 
+                                         IsReadOnly="True" Margin="5"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Código:" Margin="5" VerticalAlignment="Center"/>
+                                <ui:TextBox Grid.Row="1" Grid.Column="1" 
+                                             Text="{Binding EditCopy.Code}" 
+                                             IsEnabled="{Binding IsInEditOrCreationMode}"
+                                             Margin="5"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Nombre:" Margin="5" VerticalAlignment="Center"/>
+                                <ui:TextBox Grid.Row="2" Grid.Column="1" 
+                                             Text="{Binding EditCopy.Name}" 
+                                             IsEnabled="{Binding IsInEditOrCreationMode}"
+                                             Margin="5"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Precio:" Margin="5" VerticalAlignment="Center"/>
+                                <ui:NumberBox Grid.Row="3" Grid.Column="1"
+                                              Value="{Binding EditCopy.Precio,StringFormat=N2}"
+                                              IsEnabled="{Binding IsInEditOrCreationMode}"
+                                              Margin="5"
+                                              Minimum="0"
+                                              SpinButtonPlacementMode="Inline" />
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <!-- Sección Impuestos y Estado -->
+                    <ui:Card Margin="0,0,0,15" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Impuestos y Estado" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,10"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                            <Grid Margin="0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Aplica IVA:" Margin="5" VerticalAlignment="Center"/>
+                                <ui:ToggleSwitch Grid.Row="0" Grid.Column="1" 
+                                                  IsChecked="{Binding EditCopy.TieneIVA}"
+                                                  IsEnabled="{Binding IsInEditOrCreationMode}"
+                                                  Margin="5" VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Estado:" Margin="5" VerticalAlignment="Center"/>
+                                <ui:ToggleSwitch Grid.Row="1" Grid.Column="1" 
+                                                  IsChecked="{Binding EditCopy.Activo}"
+                                                  OffContent="Inactivo"
+                                                  OnContent="Activo"
+                                                  IsEnabled="False"
+                                                  Margin="5" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <!-- Sección Descripción y Notas -->
+                    <ui:Card Margin="0,0,0,15" Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Descripción y Notas" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,10"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                            <TextBlock Text="Descripción:" Margin="5,5,5,0"/>
+                            <ui:TextBox Text="{Binding EditCopy.Descripcion}" 
+                                         IsEnabled="{Binding IsInEditOrCreationMode}"
+                                         Margin="5" 
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         MinHeight="60"/>
+
+                            <TextBlock Text="Notas:" Margin="5,10,5,0"/>
+                            <ui:TextBox Text="{Binding EditCopy.Nota}" 
+                                         IsEnabled="{Binding IsInEditOrCreationMode}"
+                                         Margin="5" 
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         MinHeight="80"
+                                         VerticalScrollBarVisibility="Auto"/>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <!-- Sección Auditoría -->
+                    <ui:Card Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Información de Auditoría" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,10"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+
+                            <Grid Margin="0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Creado por:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" 
+                                         Text="{Binding EditCopy.UsuarioCreador.Name, Mode=OneWay}" 
+                                         IsReadOnly="True" Margin="5"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Fecha creación:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" 
+                                         Text="{Binding EditCopy.FechaCreacion, StringFormat='dd/MM/yyyy HH:mm'}" 
+                                         IsReadOnly="True" Margin="5"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Editado por:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" 
+                                         Text="{Binding EditCopy.UsuarioEdicion.Name, Mode=OneWay}" 
+                                         IsReadOnly="True" Margin="5"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Fecha edición:" Margin="5" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="3" Grid.Column="1" 
+                                         Text="{Binding EditCopy.FechaEdicion, StringFormat='dd/MM/yyyy HH:mm'}" 
+                                         IsReadOnly="True" Margin="5"/>
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:Card Background="{DynamicResource ControlFillColorDefaultBrush}">
+                        <ui:Button  Content="Activar" Margin="5 20 5 5"
+                                    Width="250" 
+                                    cal:Message.Attach="[Event Click] = [Action Activate()]"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Visibility="{Binding EditCopy.Activo, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=INVERT}"
+                                    Appearance="Primary" ></ui:Button>
+                    </ui:Card>
+                </StackPanel>
+            </ui:Card>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

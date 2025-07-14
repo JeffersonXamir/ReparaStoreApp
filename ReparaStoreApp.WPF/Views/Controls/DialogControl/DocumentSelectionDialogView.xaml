@@ -1,0 +1,71 @@
+﻿<ui:FluentWindow x:Class="ReparaStoreApp.WPF.Views.Controls.DialogControl.DocumentSelectionDialogView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+           xmlns:cal="http://www.caliburnproject.org"
+           xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+           Title="{Binding Title}"
+           MinWidth="600"
+           MinHeight="500"
+           Width="600"
+           Height="500"
+           SizeToContent="WidthAndHeight"
+           ResizeMode="NoResize"
+           WindowStartupLocation="CenterOwner"
+           WindowStyle="SingleBorderWindow"
+           Icon="/Assets/Icons/ReparaStoreApp_Blanco.ico"
+           MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header con icono y título -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5 10 10 10">
+            <ui:SymbolIcon Symbol="{Binding Icon}" Margin="0,0,10,0"/>
+            <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold"/>
+        </StackPanel>
+
+        <!-- Mensaje -->
+        <TextBlock Grid.Row="0" 
+                  Text="{Binding Message}" 
+                  Margin="15,50,15,5"
+                  TextWrapping="Wrap" 
+                  HorizontalAlignment="Stretch"
+                  Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+        <!-- Contenido principal -->
+        <Border Grid.Row="1" Margin="15,5,15,5">
+            <ContentControl cal:View.Model="{Binding ListViewModel}" 
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <cal:ActionMessage MethodName="HandleDoubleClick"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ContentControl>
+        </Border>
+
+        <!-- Botones -->
+        <Border Grid.Row="2" 
+               Background="{DynamicResource SystemControlPageBackgroundMediumBrush}"
+               Padding="0,10,0,10">
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right" 
+                       Margin="15,0,15,0">
+                <ui:Button Content="Cancelar" 
+                          Margin="0,0,10,0" 
+                          MinWidth="100"
+                          cal:Message.Attach="[Event Click] = [Cancel()]"/>
+                <ui:Button Content="Aceptar" 
+                          Appearance="Primary" 
+                          MinWidth="100"
+                          cal:Message.Attach="[Event Click] = [Accept()]"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

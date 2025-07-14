@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using ReparaStoreApp.WPF.Helpers;
 using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReparaStoreApp.WPF.ViewModels
 {
-    public class ShellViewModel : Conductor<IScreen>.Collection.OneActive
+    public class ShellViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<SessionClosedEvent>
     {
         private readonly IWindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator;
@@ -21,8 +22,15 @@ namespace ReparaStoreApp.WPF.ViewModels
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
 
+            _eventAggregator.SubscribeOnUIThread(this);
+        }
+
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
             // Mostrar la pantalla de login al inicio
             ShowLogin();
+            //OnLoginSuccess();
+            return base.OnActivateAsync(cancellationToken);
         }
 
         private void ShowLogin()
@@ -35,8 +43,20 @@ namespace ReparaStoreApp.WPF.ViewModels
         public void OnLoginSuccess()
         {
             _isLoggedIn = true;
-            // Aquí cargaremos el dashboard después del login
-            // ShowDashboard();
+            var dashboardVM = IoC.Get<MainViewModel>();
+            ActivateItemAsync(dashboardVM);
+        }
+
+        public void LogOutSession()
+        {
+            _isLoggedIn = false;
+            var dashboardVM = IoC.Get<LoginViewModel>();
+            ActivateItemAsync(dashboardVM);
+        }
+
+        public async Task HandleAsync(SessionClosedEvent message, CancellationToken cancellationToken)
+        {
+            ShowLogin();
         }
     }
 }

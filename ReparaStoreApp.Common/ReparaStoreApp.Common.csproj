@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="Caliburn.Micro.Core" Version="4.0.230" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReparaStoreApp.Entities\ReparaStoreApp.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

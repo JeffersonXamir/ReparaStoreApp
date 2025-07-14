@@ -7,26 +7,38 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>d566f169-b0be-4e1d-b588-ab8ad26ac793</UserSecretsId>
+    <PackageIcon>ReparaStoreApp_Blanco.ico</PackageIcon>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Assets\Icons\ReparaStoreApp.ico" />
+    <None Remove="Assets\Icons\ReparaStoreAppIcon.ico" />
+    <None Remove="Assets\Images\Home.jpg" />
     <None Remove="Assets\Images\imagen_background.jpg" />
     <None Remove="Assets\Images\imagen_background_1.jpg" />
+    <None Remove="Assets\Images\ReparaStoreApp.png" />
+    <None Remove="Assets\Images\UG_2025.PNG" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Icons\ReparaStoreApp_Blanco.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Caliburn.Micro" Version="4.0.230" />
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.230" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="WPF-UI" Version="4.0.3" />
   </ItemGroup>
 
@@ -38,13 +50,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Assets\Icons\ReparaStoreApp.ico" />
+    <Resource Include="Assets\Icons\ReparaStoreAppIcon.ico" />
+    <Resource Include="Assets\Images\Home.jpg" />
     <Resource Include="Assets\Images\imagen_background.jpg" />
     <Resource Include="Assets\Images\imagen_background_1.jpg" />
+    <Resource Include="Assets\Images\ReparaStoreApp.png" />
+    <Resource Include="Assets\Images\UG_2025.PNG" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,10 +68,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Icons\ReparaStoreApp.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Assets\Icons\ReparaStoreApp_Blanco.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
+	
 </Project>

@@ -15,14 +15,30 @@ namespace ReparaStoreApp.Data
             //    .AddJsonFile("appsettings.json")
             //    .AddUserSecrets<DesignTimeDbContextFactory>()
             //    .Build();
-            var connectionString = "Server=localhost;Database=ReparaStoreDb;User=root;Password=cas1001ja;Port=3306;";
+            //var connectionString = "Server=localhost;Database=ReparaStoreDb;User=root;Password=cas1001ja;Port=3306;";
 
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
-            //var connectionString = configuration.GetConnectionString("MariaDB");
+            //var builder = new DbContextOptionsBuilder<AppDbContext>();
+            ////var connectionString = configuration.GetConnectionString("MariaDB");
 
-            builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            //builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
-            return new AppDbContext(builder.Options);
+            //return new AppDbContext(builder.Options);
+
+            var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Development";
+            var basePath = Directory.GetCurrentDirectory();
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(basePath)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env}.json", optional: true);
+
+            var config = builder.Build();
+            var connectionString = config.GetConnectionString("MariaDB");
+
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }

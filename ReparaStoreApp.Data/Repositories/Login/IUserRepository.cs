@@ -10,8 +10,16 @@ namespace ReparaStoreApp.Data.Repositories.Login
     public interface IUserRepository
     {
         Task<User> GetByUsernameAsync(string username);
-        //Task AddAsync(User user);
-        //Task UpdateAsync(User user);
         Task<User> GetByIdAsync(int id);
+        Task<IEnumerable<User>> SearchAsync(string searchText, int page, int pageSize, string? filter = null);
+        Task<int> GetCountAsync(string searchText);
+        Task SaveAsync(User user);
+        Task Delete(User user);
+        Task Activate(User user);
+
+        Task <Params> GetParamByCode(string code);
+
+        Task<IEnumerable<Role>> SearchRolesAsync(string searchText, int page, int pageSize);
+        Task<IEnumerable<User>> GetAllUsersAsync(string? filter = null);
     }
 }

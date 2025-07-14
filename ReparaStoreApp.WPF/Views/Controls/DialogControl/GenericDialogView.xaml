@@ -1,0 +1,60 @@
+﻿<ui:FluentWindow x:Class="ReparaStoreApp.WPF.Views.Controls.DialogControl.GenericDialogView"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:cal="http://www.caliburnproject.org"
+                 Title="{Binding Title}"
+                 MinWidth="200"
+                 MinHeight="50"
+                 Width="400"
+                 Height="200"
+                 ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
+                 WindowStyle="SingleBorderWindow"
+                 Icon="/Assets/Icons/ReparaStoreApp_Blanco.ico"
+                 MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header con título -->
+        <Border Grid.Row="0" Background="{DynamicResource SystemControlBackgroundAccentBrush}">
+            <TextBlock Text="{Binding Title}" 
+                      Margin="15"
+                      FontSize="16"
+                      FontWeight="SemiBold"
+                      Foreground="White"/>
+        </Border>
+
+        <!-- Contenido principal -->
+        <ScrollViewer Grid.Row="1" Margin="15">
+            <StackPanel>
+                <TextBlock Text="{Binding Message}"
+                          TextWrapping="Wrap"
+                          Margin="0,0,0,15"/>
+                <ContentControl Content="{Binding Content}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Botones -->
+        <Border Grid.Row="2" 
+                Background="{DynamicResource SystemControlPageBackgroundMediumBrush}"
+                Padding="15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="{Binding SecondaryButtonText}"
+                          Margin="0,0,10,0"
+                          MinWidth="100"
+                          Visibility="{Binding ShowSecondaryButton, Converter={StaticResource BooleanToVisibilityConverter}}"
+                          cal:Message.Attach="[Event Click] = [SecondaryButtonClick()]"/>
+                <ui:Button Content="{Binding PrimaryButtonText}"
+                          MinWidth="100"
+                          Appearance="{Binding PrimaryButtonAppearance}"
+                          cal:Message.Attach="[Event Click] = [PrimaryButtonClick()]"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</ui:FluentWindow>
