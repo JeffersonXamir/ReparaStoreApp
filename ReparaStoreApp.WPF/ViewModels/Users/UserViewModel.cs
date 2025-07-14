@@ -182,6 +182,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                 EditCopy = new UserItem(); // Crear una copia vacía para edición
                 EditCopy.Id = 0;
                 //EditCopy.UsuarioCreadorId = userId;
+                EditCopy.IsActive = true;
 
                 // Lógica específica para nuevo usuario
                 // Ejemplo: _windowManager.ShowDialogAsync(new NewUserViewModel());

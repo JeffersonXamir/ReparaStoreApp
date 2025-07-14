@@ -120,6 +120,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Clientes
                 EditCopy.Id = 0;
                 EditCopy.FechaNacimiento = new DateTime(1990, 1, 1);
                 EditCopy.UsuarioCreadorId = userId;
+                EditCopy.Activo = true;
 
             }
             catch (Exception ex)

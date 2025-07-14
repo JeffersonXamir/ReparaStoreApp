@@ -123,6 +123,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Productos
                 EditCopy.Id = 0;
                 EditCopy.UsuarioCreadorId = userId;
                 EditCopy.Tipo = Entities.Models.Inventario.TipoItem.Producto;
+                EditCopy.Activo = true;
             }
             catch (Exception ex)
             {

@@ -576,8 +576,8 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                     detalle.Cantidad = 1;
                     detalle.Activo = true;
                     detalle.PrecioUnitario = selectedProduct.Precio;
-                    detalle.TasaIVA = TasaIVA;
-                    detalle.TotalIVA = ((detalle.Cantidad * detalle.PrecioUnitario) * detalle.TasaIVA / 100);
+                    detalle.TasaIVA = selectedProduct.TieneIVA ? TasaIVA : 0;
+                    detalle.TotalIVA = selectedProduct.TieneIVA ? ((detalle.Cantidad * detalle.PrecioUnitario) * detalle.TasaIVA / 100) : 0;
                     detalle.SubTotal = (detalle.Cantidad * detalle.PrecioUnitario);
                     detalle.Total = detalle.SubTotal + detalle.TotalIVA;
                     detalle.FechaCreacion = DateTime.Now;
