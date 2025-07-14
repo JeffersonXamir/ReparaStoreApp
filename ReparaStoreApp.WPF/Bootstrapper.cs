@@ -34,9 +34,11 @@ using ReparaStoreApp.WPF.ViewModels.Login;
 using ReparaStoreApp.WPF.ViewModels.Main;
 using ReparaStoreApp.WPF.ViewModels.Productos;
 using ReparaStoreApp.WPF.ViewModels.Reparaciones;
+using ReparaStoreApp.WPF.ViewModels.Services;
 using ReparaStoreApp.WPF.ViewModels.Services.Clientes;
 using ReparaStoreApp.WPF.ViewModels.Services.Dispositivos;
 using ReparaStoreApp.WPF.ViewModels.Services.Productos;
+using ReparaStoreApp.WPF.ViewModels.Services.Reparacion;
 using ReparaStoreApp.WPF.ViewModels.Services.Servicios;
 using ReparaStoreApp.WPF.ViewModels.Services.Users;
 using ReparaStoreApp.WPF.ViewModels.Servicios;
@@ -145,6 +147,11 @@ namespace ReparaStoreApp.WPF
             _container.PerRequest<GenericDialogViewModel>();
             _container.PerRequest<OptionsDialogViewModel>();
             _container.PerRequest<GenericSelectionDialogViewModel<ProductosItem>>(); // Diálogo genérico con lista
+
+            // Registro de servicios para documentos
+            _container.PerRequest<IDocumentDataService<ReparacionItem>, ReparacionDataService>();
+            _container.PerRequest<DocumentListViewModel<ReparacionItem>>();
+            _container.PerRequest<DocumentSelectionDialogViewModel<ReparacionItem>>();
 
             // 7. Registra tus ViewModels aquí
             _container

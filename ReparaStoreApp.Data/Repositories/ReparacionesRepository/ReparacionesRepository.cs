@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReparaStoreApp.Data.Repositories.ReparacionesRepository;
+using ReparaStoreApp.Entities.Models.Dispositivo;
 using ReparaStoreApp.Entities.Models.Store;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ namespace ReparaStoreApp.Data.Repositories.ReparacionesRepository
         public async Task<Reparacion> GetByIdAsync(int id)
         {
             return await _context.Reparaciones
-                .Include(r => r.Detalles)
                 .Include(r => r.Dispositivo)
                 .Include(r => r.Tecnico)
                 .Include(r => r.Cajero)
@@ -29,6 +29,7 @@ namespace ReparaStoreApp.Data.Repositories.ReparacionesRepository
                 .Include(r => r.UsuarioAprobacion)
                 .Include(r => r.UsuarioCreador)
                 .Include(r => r.UsuarioEdicion)
+                .Include(r => r.Detalles.Where(x => x.Activo)).ThenInclude(d => d.Item)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 

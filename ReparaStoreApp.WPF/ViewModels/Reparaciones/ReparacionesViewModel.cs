@@ -34,6 +34,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         private readonly IUserService _UserService;
         private readonly IDataService<ClientesItem> _ClientesDataService;
         private readonly GenericSelectionDialogViewModel<ProductosItem> _productSelectionDialog;
+        private readonly DocumentSelectionDialogViewModel<ReparacionItem> _documentDialog;
         private readonly IMapper _mapper;
 
         public bool IsInEditOrCreationMode => CreationMode || EditMode;
@@ -56,7 +57,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         public DispositivosItem DeviceSelect
         {
             get { return _deviceSelect; }
-            set { _deviceSelect = value; NotifyOfPropertyChange(() => DeviceSelect); _ = OnSelectDispositivo(); }
+            set { _deviceSelect = value; NotifyOfPropertyChange(() => DeviceSelect); _= OnSelectDispositivo(); }
         }
 
         private BindableCollection<ClientesItem> _availableClients;
@@ -149,6 +150,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             set { _subTotalDocument = value; NotifyOfPropertyChange(() => SubTotalDocument); }
         }
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { _isLoading = value; NotifyOfPropertyChange(()=> IsLoading); }
+        }
+
         public ReparacionesViewModel(
                             IWindowManager windowManager,
                             IEventAggregator eventAggregator,
@@ -158,6 +166,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                             IReparacionesService ReparacionesService,
                             IUserService UserService,
                             GenericSelectionDialogViewModel<ProductosItem> ProductSelectionDialog,
+                            DocumentSelectionDialogViewModel<ReparacionItem> documentDialog,
                             IMapper mapper) : base(eventAggregator)
         {
             _windowManager = windowManager;
@@ -168,6 +177,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             _ReparacionesService = ReparacionesService;
             _UserService = UserService;
             _productSelectionDialog = ProductSelectionDialog;
+            _documentDialog = documentDialog;
             _mapper = mapper;
 
             AvailableClients = new BindableCollection<ClientesItem>();
@@ -212,6 +222,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+                if (IsLoading) return;
                 if ((DeviceSelect?.ClienteId ?? 0) == 0) return;
 
                 var item = await _ClientesService.GetClientesByIdAsync(DeviceSelect.ClienteId);
@@ -642,6 +653,60 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
             }
 
         }
+
+        public async Task SearchDocument()
+        {
+            var selectedDocument = await _documentDialog.ShowDialogAsync(
+                "Seleccionar Documento",
+                "Seleccione un documento de la lista");
+
+            if (selectedDocument != null)
+            {
+                //CurrentRepair.Numero = selectedDocument.Numero;
+                //CurrentRepair.DocumentoId = selectedDocument.Id;
+                // Actualizar cualquier otra propiedad relacionada con el documento
+
+                await LoadDocument(selectedDocument.Id);
+            }
+        }
+
+        public async Task LoadDocument(int documentId)
+        {
+            try
+            {
+                //IsLoading = true;
+                await ClearForm();
+
+                await CargarEstados();
+                await CargarDispositivos();
+                await CargarTecnicos();
+
+                if (documentId == 0) return;
+
+                var response = await _ReparacionesService.GetByIdAsync(documentId);
+                if (response == null) throw new Exception("No se pudo obtener el documento.");
+
+                CurrentRepair = response;
+
+                var Item = AvailableDevices;
+                TechnicianSelect = _mapper.Map<UserItem>(response.Tecnico);
+                //ClientSelect = _mapper.Map<ClientesItem>(response.Tecnico);
+                DeviceSelect = AvailableDevices?.FirstOrDefault(x => x.Id == response.Dispositivo.Id);
+                //ClientSelect = _mapper.Map<ClientesItem>(response.Dispositivo.Cliente);
+                RepairStateSelect = RepairStates?.FirstOrDefault(x => x.Estado == response.Estado);
+
+                await CalculateTotals();
+                IsLoading = false;
+
+            }
+            catch (Exception ex)
+            {
+                await ShowNotificationMessage($"No se pudo cargar el formulario.");
+                await ShowNotification($"No se pudo cargar el formulario: {ex.Message}");
+            }
+            finally { IsLoading = false; }
+        }
+
 
         public override async Task<ValidateForm> ValidateForm()
         {

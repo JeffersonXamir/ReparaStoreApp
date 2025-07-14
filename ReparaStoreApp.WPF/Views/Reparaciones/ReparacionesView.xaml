@@ -51,10 +51,20 @@
 
                                 <!-- Columna 1 -->
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Número:" Margin="5" VerticalAlignment="Center"/>
-                                <ui:TextBox Grid.Row="0" Grid.Column="1" 
-                                             Text="{Binding CurrentRepair.Numero}" 
-                                             IsEnabled="False"
-                                             Margin="5"/>
+                                <DockPanel Grid.Row="0" Grid.Column="1" Margin="5">
+                                    <ui:Button 
+                                            DockPanel.Dock="Right" 
+                                            Content="Buscar" 
+                                            Margin="5,0,0,0"
+                                            cal:Message.Attach="[Event Click] = [SearchDocument]"
+                                            IsEnabled="{Binding IsInEditOrCreationMode, Converter={StaticResource InverseBooleanConverter}}"
+                                            Appearance="Secondary"
+                                            Icon="{ui:SymbolIcon Search16}"
+                                            MinWidth="80"/>
+                                    <ui:TextBox 
+                                            Text="{Binding CurrentRepair.Numero}" 
+                                            IsEnabled="False"/>
+                                </DockPanel>
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Fecha:" Margin="5" VerticalAlignment="Center"/>
                                 <DatePicker Grid.Row="1" Grid.Column="1" 
