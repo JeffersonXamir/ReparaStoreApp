@@ -376,6 +376,13 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
         {
             try
             {
+                if (CurrentRepair.Estado == EstadoReparacion.Completado)
+                {
+                    await ShowNotificationMessage($"El documento ha sido Confirmado y ya no puede ser editado.");
+                    return;
+                }
+
+
                 EditMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
 
@@ -410,6 +417,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                     if (!response.Success)
                     {
                         await ShowNotification(response.Error);
+                        await ShowNotificationMessage(response.Error);
                         return;
                     }
 
@@ -423,6 +431,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
                     if (!response.Success)
                     {
                         await ShowNotification(response.Error);
+                        await ShowNotificationMessage($"{response.Error},\nPara garantizar un proceso correcto, siga el orden de aprobaciones paso a paso hasta llegar al estado \"Confirmado\". No omita etapas.");
                         return;
                     }
 
@@ -665,6 +674,9 @@ namespace ReparaStoreApp.WPF.ViewModels.Reparaciones
 
         public async Task SearchDocument()
         {
+            _documentDialog.ListViewModel.SearchText = "";
+            await _documentDialog.ListViewModel.LoadData();
+
             var selectedDocument = await _documentDialog.ShowDialogAsync(
                 "Seleccionar Documento",
                 "Seleccione un documento de la lista");
