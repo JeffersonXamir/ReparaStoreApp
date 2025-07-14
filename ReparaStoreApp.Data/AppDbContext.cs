@@ -317,15 +317,219 @@ namespace ReparaStoreApp.Data
 
             #region Tienda
             modelBuilder.Entity<ItemEntity>().HasData(
-                new ItemEntity { Id = 1, Codigo = "PROD-001", Nombre = "Pantalla iPhone X", Tipo = TipoItem.Producto, Precio = 120.00m, UsuarioCreadorId = 1 },
-                new ItemEntity { Id = 2, Codigo = "PROD-002", Nombre = "Batería Samsung S20", Tipo = TipoItem.Producto, Precio = 45.00m, UsuarioCreadorId = 1 },
-                new ItemEntity { Id = 3, Codigo = "SERV-001", Nombre = "Cambio de pantalla", Tipo = TipoItem.Servicio, Precio = 50.00m, UsuarioCreadorId = 1 }
+                new ItemEntity { Id = 1, Codigo = "PROD-001", Nombre = "Pantalla iPhone X", Tipo = TipoItem.Producto, Precio = 120.00m, UsuarioCreadorId = 1, FechaCreacion = DateTime.UtcNow, Activo = true },
+                new ItemEntity { Id = 2, Codigo = "PROD-002", Nombre = "Batería Samsung S20", Tipo = TipoItem.Producto, Precio = 45.00m, UsuarioCreadorId = 1, FechaCreacion = DateTime.UtcNow, Activo = true },
+                new ItemEntity { Id = 3, Codigo = "SERV-001", Nombre = "Cambio de pantalla", Tipo = TipoItem.Servicio, Precio = 50.00m, UsuarioCreadorId = 1, FechaCreacion = DateTime.UtcNow, Activo = true },
+                new ItemEntity
+                {
+                    Id = 4,
+                    Codigo = "PROD-003",
+                    Nombre = "Cargador USB-C",
+                    Tipo = TipoItem.Producto,
+                    Precio = 15.00m,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow,
+                    Activo = true
+                },
+                new ItemEntity
+                {
+                    Id = 5,
+                    Codigo = "PROD-004",
+                    Nombre = "Cable Lightning",
+                    Tipo = TipoItem.Producto,
+                    Precio = 10.00m,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow,
+                    Activo = true
+                },
+                new ItemEntity
+                {
+                    Id = 6,
+                    Codigo = "SERV-002",
+                    Nombre = "Cambio de conector de carga",
+                    Tipo = TipoItem.Servicio,
+                    Precio = 35.00m,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow,
+                    Activo = true
+                }
             );
 
             modelBuilder.Entity<Inventario>().HasData(
-                new Inventario { Id = 1, ProductoId = 1, Cantidad = 10, StockMinimo = 5 },
-                new Inventario { Id = 2, ProductoId = 2, Cantidad = 15, StockMinimo = 5 }
+                new Inventario { Id = 1, ProductoId = 1, Cantidad = 100, StockMinimo = 5, StockMaximo = 400 },
+                new Inventario { Id = 2, ProductoId = 2, Cantidad = 150, StockMinimo = 20, StockMaximo = 300 },
+                new Inventario { Id = 3, ProductoId = 4, Cantidad = 200, StockMinimo = 15 , StockMaximo = 500 },
+                new Inventario { Id = 4, ProductoId = 5, Cantidad = 500, StockMinimo = 10 , StockMaximo = 800 }
             );
+
+            modelBuilder.Entity<Kardex>().HasData(
+                // Movimientos de kardex para los productos
+                new Kardex
+                {
+                    Id = 1,
+                    Fecha = DateTime.UtcNow.AddDays(-5),
+                    Tipo = TipoMovimientoKardex.Ingreso,
+                    ProductoId = 1,
+                    Cantidad = 100,
+                    PrecioUnitario = 120.00m,
+                    Total = 12000.00m,
+                    Notas = "Carga inicial Productos",
+                    UsuarioId = 1,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow.AddDays(-5)
+                },
+                new Kardex
+                {
+                    Id = 2,
+                    Fecha = DateTime.UtcNow.AddDays(-3),
+                    Tipo = TipoMovimientoKardex.Ingreso,
+                    ProductoId = 2,
+                    Cantidad = 150,
+                    PrecioUnitario = 45.00m,
+                    Total = 6750.00m,
+                    Notas = "Carga inicial Productos",
+                    UsuarioId = 1,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow.AddDays(-3)
+                },
+                new Kardex
+                {
+                    Id = 3,
+                    Fecha = DateTime.UtcNow.AddDays(-2),
+                    Tipo = TipoMovimientoKardex.Ingreso,
+                    ProductoId = 4,
+                    Cantidad = 200,
+                    PrecioUnitario = 15.00m,
+                    Total = 3000.00m,
+                    Notas = "Carga inicial Productos",
+                    UsuarioId = 1,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow.AddDays(-2)
+                },
+                new Kardex
+                {
+                    Id = 4,
+                    Fecha = DateTime.UtcNow.AddDays(-1),
+                    Tipo = TipoMovimientoKardex.Ingreso,
+                    ProductoId = 5,
+                    Cantidad = 500,
+                    PrecioUnitario = 10.00m,
+                    Total = 5000.00m,
+                    Notas = "Carga inicial Productos",
+                    UsuarioId = 1,
+                    UsuarioCreadorId = 1,
+                    FechaCreacion = DateTime.UtcNow.AddDays(-1)
+                }
+            );
+
+            modelBuilder.Entity<Clientes>().HasData(
+                new Clientes
+                {
+                    Id = 1,
+                    Codigo = "CLI-001",
+                    Nombre = "Juan Pérez",
+                    Identificacion = "0924875614",
+                    PrimerNombre = "Juan",
+                    PrimerApellido = "Pérez",
+                    SegundoNombre = "Pablo",
+                    SegundoApellido = "Segundo",
+                    FechaNacimiento = new DateTime(1985, 5, 15),
+                    Correo = "juan@example.com",
+                    Telefono = "809-555-1234",
+                    Direccion = "Calle Principal #123",
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    Nota = string.Empty,
+                    Activo = true
+                },
+                new Clientes
+                {
+                    Id = 2,
+                    Codigo = "CLI-002",
+                    Nombre = "María Rodríguez",
+                    Identificacion = "0924846591",
+                    PrimerNombre = "María",
+                    PrimerApellido = "Rodríguez",
+                    SegundoNombre = "Lucía",
+                    SegundoApellido = "Alvarez",
+                    FechaNacimiento = new DateTime(1990, 8, 22),
+                    Correo = "maria@example.com",
+                    Telefono = "809-555-9876",
+                    Direccion = "Avenida Libertad #456",
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    Nota = string.Empty,
+                    Activo = true
+                },
+                new Clientes
+                {
+                    Id = 3,
+                    Codigo = "CLI-003",
+                    Nombre = "Carlos Sánchez",
+                    Identificacion = "0924859632",
+                    PrimerNombre = "Carlos",
+                    PrimerApellido = "Sánchez",
+                    SegundoNombre = "Tyron",
+                    SegundoApellido = "González",
+                    FechaNacimiento = new DateTime(1982, 3, 10),
+                    Correo = "carlos@example.com",
+                    Telefono = "829-555-4567",
+                    Direccion = "Calle Las Flores #789",
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    Nota = string.Empty,
+                    Activo = true
+                }
+            );
+
+            modelBuilder.Entity<Dispositivos>().HasData(
+                new Dispositivos
+                {
+                    Id = 1,
+                    Codigo = "DIS-001",
+                    Nombre = "iPhone X de Juan",
+                    Marca = "Apple",
+                    Modelo = "iPhone X",
+                    NumeroSerie = "A123456789",
+                    Descripcion = string.Empty,
+                    Estado = EstadoDispositivo.Ingresado,
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    ClienteId = 1,
+                    Activo = true
+                },
+                new Dispositivos
+                {
+                    Id = 2,
+                    Codigo = "DIS-002",
+                    Nombre = "Samsung Galaxy S21 de María",
+                    Marca = "Samsung",
+                    Modelo = "Galaxy S21",
+                    NumeroSerie = "SM123456789",
+                    Descripcion = string.Empty,
+                    Estado = EstadoDispositivo.Ingresado,
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    ClienteId = 2,
+                    Activo = true
+                },
+                new Dispositivos
+                {
+                    Id = 3,
+                    Codigo = "DIS-003",
+                    Nombre = "iPad Pro de Carlos",
+                    Marca = "Apple",
+                    Modelo = "iPad Pro 12.9\"",
+                    NumeroSerie = "IPD987654321",
+                    Descripcion = string.Empty,
+                    Estado = EstadoDispositivo.EnReparacion,
+                    FechaCreacion = DateTime.UtcNow,
+                    UsuarioCreadorId = 1,
+                    ClienteId = 3,
+                    Activo = true
+                }
+            );
+
             #endregion
 
             #region Params
