@@ -65,7 +65,14 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             set { _titulo = value; NotifyOfPropertyChange(() => Titulo); }
         }
 
-        public BindableCollection<RolesItem> Options { get; set; }
+        //public BindableCollection<RolesItem> Options { get; set; }
+        private BindableCollection<RolesItem> _options;
+        public BindableCollection<RolesItem> Options
+        {
+            get { return _options; }
+            set { _options = value; NotifyOfPropertyChange(() => Options); }
+        }
+
 
         public UserViewModel(IAuthService authService,
                             IWindowManager windowManager,
@@ -157,11 +164,11 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
             base.OnViewLoaded(view);
         }
 
-        public override Task New()
+        public override async Task New()
         {
             try
             {
-                CargarRoles();
+                await CargarRoles();
 
                 CreationMode = true;
                 NotifyOfPropertyChange(() => IsInEditOrCreationMode);
@@ -184,7 +191,7 @@ namespace ReparaStoreApp.WPF.ViewModels.Users
                 HandleError(ex, "crear nuevo usuario");
             }
 
-            return base.New();
+            await base.New();
         }
 
         public override Task Edit()
