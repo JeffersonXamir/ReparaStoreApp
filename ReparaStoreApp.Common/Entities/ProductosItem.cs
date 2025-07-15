@@ -38,7 +38,6 @@ namespace ReparaStoreApp.Common.Entities
             set { _tipo = value; NotifyOfPropertyChange(() => Tipo); }
         }
 
-
         private bool _activo;
         public bool Activo
         {
@@ -52,7 +51,7 @@ namespace ReparaStoreApp.Common.Entities
             get { return _tieneIVA; }
             set { _tieneIVA = value; NotifyOfPropertyChange(() => TieneIVA); }
         }
-
+        
         public DateTime FechaCreacion { get; set; }
         public int UsuarioCreadorId { get; set; }
         public User UsuarioCreador { get; set; }
