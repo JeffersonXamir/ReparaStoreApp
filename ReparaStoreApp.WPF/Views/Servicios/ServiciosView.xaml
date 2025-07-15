@@ -69,7 +69,7 @@
 
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Precio:" Margin="5" VerticalAlignment="Center"/>
                                 <ui:NumberBox Grid.Row="3" Grid.Column="1"
-                                              Value="{Binding EditCopy.Precio, StringFormat=N2}"
+                                              Value="{Binding EditCopy.Precio, StringFormat=N2, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                               IsEnabled="{Binding IsInEditOrCreationMode}"
                                               Margin="5"
                                               Minimum="0"
